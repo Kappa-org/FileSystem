@@ -36,6 +36,8 @@ class DirectoryTest extends TestCase
 
 	protected function setUp()
 	{
+		if(!is_dir(__DIR__ . '/../../data/dir'))
+			@mkdir(__DIR__ . '/../../data/dir');
 		$this->directory = __DIR__ . '/../../data/dir';
 		$this->path = $this->directory . '/directory';
 		$this->dir = new Directory($this->path);
