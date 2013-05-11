@@ -10,7 +10,7 @@ Easy system for work with files and directories(FileUpload, Image, File, Directo
 
 ## Installation
 
-The best way to install Kdyby/FileManager is using Composer:
+The best way to install Kdyby/FileSystem is using Composer:
 
 ```bash
 $ composer require kappa/filesystem:@dev
