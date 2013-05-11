@@ -12,6 +12,7 @@ namespace Kappa\Tests\FileSystem\Directory;
 
 use Kappa\FileSystem\Directory;
 use Kappa\FileSystem\File;
+use Kappa\FileSystem\SplFileInfo;
 use Kappa\Tester\TestCase;
 use Tester\Assert;
 
@@ -78,7 +79,7 @@ class DirectoryTest extends TestCase
 
 	public function testGetInfo()
 	{
-		Assert::equal(new \SplFileInfo($this->path), $this->dir->getInfo());
+		Assert::equal(new SplFileInfo($this->path), $this->dir->getInfo());
 	}
 
 	public function testGetContent()
@@ -92,13 +93,13 @@ class DirectoryTest extends TestCase
 		$file = @fopen($this->path . '/test.txt', 'w+');
 		@fwrite($file, "");
 		@fclose($file);
-		Assert::equal(array(realpath($this->path . '/test.txt') => new \SplFileInfo($this->path . '/test.txt')), $this->dir->getFiles());
+		Assert::equal(array(realpath($this->path . '/test.txt') => new SplFileInfo($this->path . '/test.txt')), $this->dir->getFiles());
 	}
 
 	public function testGetDirectories()
 	{
 		mkdir($this->path . '/test');
-		Assert::equal(array(realpath($this->path . '/test') => new \SplFileInfo($this->path . '/test')), $this->dir->getDirectories());
+		Assert::equal(array(realpath($this->path . '/test') => new SplFileInfo($this->path . '/test')), $this->dir->getDirectories());
 	}
 
 	public function testCopy()

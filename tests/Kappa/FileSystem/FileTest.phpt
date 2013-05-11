@@ -11,6 +11,7 @@
 namespace Kappa\Tests\FileSystem\File;
 
 use Kappa\FileSystem\File;
+use Kappa\FileSystem\SplFileInfo;
 use Kappa\Tester\Helpers;
 use Kappa\Tester\TestCase;
 use Tester\Assert;
@@ -65,7 +66,7 @@ class FileTest extends TestCase
 
 	public function testGetInfo()
 	{
-		Assert::equal(new \SplFileInfo($this->path), $this->file->getInfo());
+		Assert::equal(new SplFileInfo($this->path), $this->file->getInfo());
 	}
 
 	public function testOverwrite()
@@ -194,11 +195,6 @@ class FileTest extends TestCase
 		Assert::false(file_exists($path));
 		Assert::same(Helpers::repairPathSeparators($path), $this->getReflection()->invokeProperty($this->file->move($path), 'path'));
 		Assert::true(file_exists($path));
-	}
-
-	public function testGetType()
-	{
-		Assert::same(".txt", $this->file->getType());
 	}
 
 	private function prepare()
