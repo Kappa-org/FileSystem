@@ -1,9 +1,9 @@
 {
 	"name": "kappa/filesystem",
 	"type":"library",
-	"description": "",
-	"keywords": [""],
-	"homepage": "",
+	"description": "Easy system for work with files and directories(FileUpload, Image, File, Directory)",
+	"keywords": ["Nette", "Kappa", "file system", "files", "image", "file upload", "directories"],
+	"homepage": "https://github.com/Kappa-org/FileSystem",
 	"license": "",
 
 	"authors": [{
@@ -13,7 +13,7 @@
 
 	"support":{
 		"email":"zarubaondra@gmail.com",
-		"issues":""
+		"issues":"https://github.com/Kappa-org/FileSystem/issues"
 	},
 
 	"require":{
