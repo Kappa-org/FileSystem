@@ -78,7 +78,8 @@ class FileTest extends TestCase
 		Assert::true($this->file->overwrite(500) instanceof File);
 		Assert::same("500", file_get_contents($this->path));
 		Assert::throws(function () {
-			$this->file->overwrite(array("text"));
+			$file = new File(__DIR__ . '/../../data/file/test.txt');
+			$file->overwrite(array("text"));
 		}, $this->exceptions['inv']);
 	}
 
@@ -100,10 +101,12 @@ class FileTest extends TestCase
 		Assert::same("Hello world!" . PHP_EOL . "I'm tester with name Tester", file_get_contents($this->path));
 
 		Assert::throws(function () {
-			$this->file->append(array("test"));
+			$file = new File(__DIR__ . '/../../data/file/test.txt');
+			$file->append(array("test"));
 		}, $this->exceptions['inv']);
 		Assert::throws(function () {
-			$this->file->append("Test", array("test"));
+			$file = new File(__DIR__ . '/../../data/file/test.txt');
+			$file->append("Test", array("test"));
 		}, $this->exceptions['inv']);
 	}
 
@@ -126,13 +129,16 @@ class FileTest extends TestCase
 		$this->prepare();
 
 		Assert::throws(function() {
-			$this->file->rename("existFile.txt");
+			$file = new File(__DIR__ . '/../../data/file/test.txt');
+			$file->rename("existFile.txt");
 		}, $this->exceptions['io']);
 		Assert::throws(function() {
-			$this->file->rename(array("test"));
+			$file = new File(__DIR__ . '/../../data/file/test.txt');
+			$file->rename(array("test"));
 		}, $this->exceptions['inv']);
 		Assert::throws(function() {
-			$this->file->rename("/noExist/file.txt");
+			$file = new File(__DIR__ . '/../../data/file/test.txt');
+			$file->rename("/noExist/file.txt");
 		}, $this->exceptions['io']);
 	}
 
@@ -165,16 +171,20 @@ class FileTest extends TestCase
 		Assert::same(Helpers::repairPathSeparators($this->path), $this->getReflection()->invokeProperty($this->file->copy($copyFile, false), 'path'));
 		$this->prepare();
 		Assert::throws(function () use($copyExistFile) {
-			$this->file->copy($copyExistFile);
+			$file = new File(__DIR__ . '/../../data/file/test.txt');
+			$file->copy($copyExistFile);
 		}, $this->exceptions['io']);
 		Assert::throws(function () {
-			$this->file->copy(array("test"));
+			$file = new File(__DIR__ . '/../../data/file/test.txt');
+			$file->copy(array("test"));
 		}, $this->exceptions['inv']);
 		Assert::throws(function () {
-			$this->file->copy("test", array("test"));
+			$file = new File(__DIR__ . '/../../data/file/test.txt');
+			$file->copy("test", array("test"));
 		}, $this->exceptions['inv']);
 		Assert::throws(function () {
-			$this->file->copy("test", true, 5);
+			$file = new File(__DIR__ . '/../../data/file/test.txt');
+			$file->copy("test", true, 5);
 		}, $this->exceptions['inv']);
 	}
 

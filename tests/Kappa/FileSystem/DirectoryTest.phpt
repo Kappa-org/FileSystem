@@ -118,13 +118,16 @@ class DirectoryTest extends TestCase
 		Assert::true(file_exists($this->path));
 
 		Assert::throws(function () {
-			$this->dir->copy(array("test"));
+			$directory = new Directory( __DIR__ . '/../../data/dir/directory');
+			$directory->copy(array("test"));
 		}, $this->exceptions['inv']);
 		Assert::throws(function () {
-			$this->dir->copy("test", array("test"));
+			$directory = new Directory( __DIR__ . '/../../data/dir/directory');
+			$directory->copy("test", array("test"));
 		}, $this->exceptions['inv']);
 		Assert::throws(function () {
-			$this->dir->copy("test", true, array("test"));
+			$directory = new Directory( __DIR__ . '/../../data/dir/directory');
+			$directory->copy("test", true, array("test"));
 		}, $this->exceptions['inv']);
 	}
 
@@ -142,10 +145,12 @@ class DirectoryTest extends TestCase
 		Assert::false(file_exists($this->path));
 
 		Assert::throws(function () {
-			$this->dir->move(array("test"));
+			$directory = new Directory( __DIR__ . '/../../data/dir/directory');
+			$directory->move(array("test"));
 		}, $this->exceptions['inv']);
 		Assert::throws(function () {
-			$this->dir->move("test", array("test"));
+			$directory = new Directory( __DIR__ . '/../../data/dir/directory');
+			$directory->move("test", array("test"));
 		}, $this->exceptions['inv']);
 	}
 
