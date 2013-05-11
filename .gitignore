@@ -1,0 +1,7 @@
+/.idea
+/vendor
+/*/*/coverage.dat
+/tests/test.log
+*.actual
+*.expected
+composer.lock

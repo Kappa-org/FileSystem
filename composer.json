@@ -1,0 +1,35 @@
+{
+	"name": "kappa/filesystem",
+	"type":"library",
+	"description": "",
+	"keywords": [""],
+	"homepage": "",
+	"license": "",
+
+	"authors": [{
+		"name": "Ondřej Záruba",
+		"homepage": "http://zaruba-ondrej.cz/"
+	}],
+
+	"support":{
+		"email":"zarubaondra@gmail.com",
+		"issues":""
+	},
+
+	"require":{
+		"php": ">= 5.4.0",
+		"nette/nette":"dev-master"
+	},
+
+	"require-dev":{
+		"nette/tester":"dev-master",
+		"kappa/tester":"dev-master"
+	},
+
+	"autoload": {
+		"psr-0": {"Kappa": "./"},
+		"classmap": [
+			"Kappa/FileSystem/exceptions.php"
+		]
+	}
+}
