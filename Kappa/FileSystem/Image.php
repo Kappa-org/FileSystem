@@ -10,14 +10,12 @@
 
 namespace Kappa\FileSystem;
 
-use Nette\Object;
-
 /**
  * Class Image
  *
  * @package Kappa\FileSystem
  */
-class Image extends Object
+class Image extends File
 {
 	/** @var \Nette\Image */
 	private $image;
@@ -38,7 +36,8 @@ class Image extends Object
 		if(count($sizes) > 0) {
 			$this->resize($sizes, $this->getFlag($flag));
 		}
-		return $this->save($target);
+		$this->save($target);
+		return parent::__construct($target);
 	}
 
 	/**
@@ -73,14 +72,14 @@ class Image extends Object
 
 	/**
 	 * @param string $target
-	 * @return File
+	 * @return bool
 	 * @throws IOException
 	 */
 	private function save($target)
 	{
 		$this->image->save($target);
 		if(file_exists($target)) {
-			return new File($target);
+			return true;
 		} else {
 			throw new IOException("Failed to save image '$target'");
 		}
