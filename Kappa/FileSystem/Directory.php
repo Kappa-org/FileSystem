@@ -106,7 +106,7 @@ class Directory extends FileSystem
 		$files = iterator_to_array(new \FilesystemIterator($this->path));
 		foreach ($files as $path => $file) {
 			if ($file->isFile()) {
-				$output[$path] = new SplFileInfo($path);
+				$output[$path] = new File($path);
 			}
 		}
 		return (isset($output)) ? $output : array();
@@ -120,7 +120,7 @@ class Directory extends FileSystem
 		$files = iterator_to_array(new \FilesystemIterator($this->path));
 		foreach ($files as $path => $file) {
 			if ($file->isDir()) {
-				$output[$path] = new SplFileInfo($path);
+				$output[$path] = new Directory($path);
 			}
 		}
 		return (isset($output)) ? $output : array();
@@ -219,11 +219,11 @@ class Directory extends FileSystem
 		$files = $obj->getFiles();
 		$directories = $obj->getDirectories();
 		foreach ($files as $path => $file) {
-			copy($path, $copyDir . DIRECTORY_SEPARATOR . $file->getBasename());
+			copy($path, $copyDir . DIRECTORY_SEPARATOR . $file->getInfo()->getBasename());
 		}
 		foreach ($directories as $path => $directory) {
 			$d = new Directory($path);
-			$copyDir = $this->create($copyDir . DIRECTORY_SEPARATOR . $directory->getBasename());
+			$copyDir = $this->create($copyDir . DIRECTORY_SEPARATOR . $directory->getInfo()->getBasename());
 			$this->_copy($d, $copyDir);
 		}
 	}

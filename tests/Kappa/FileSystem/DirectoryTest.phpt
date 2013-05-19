@@ -95,13 +95,13 @@ class DirectoryTest extends TestCase
 		$file = @fopen($this->path . '/test.txt', 'w+');
 		@fwrite($file, "");
 		@fclose($file);
-		Assert::equal(array(realpath($this->path . '/test.txt') => new SplFileInfo($this->path . '/test.txt')), $this->dir->getFiles());
+		Assert::equal(array(realpath($this->path . '/test.txt') => new File($this->path . '/test.txt')), $this->dir->getFiles());
 	}
 
 	public function testGetDirectories()
 	{
 		mkdir($this->path . '/test');
-		Assert::equal(array(realpath($this->path . '/test') => new SplFileInfo($this->path . '/test')), $this->dir->getDirectories());
+		Assert::equal(array(realpath($this->path . '/test') => new Directory($this->path . '/test')), $this->dir->getDirectories());
 	}
 
 	public function testCopy()

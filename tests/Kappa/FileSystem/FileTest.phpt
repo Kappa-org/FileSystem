@@ -219,7 +219,6 @@ class FileTest extends TestCase
 		$file = @fopen($this->directory . '/existFile.txt', 'w+');
 		@fwrite($file, "Hello");
 		@fclose($file);
-
 	}
 
 	protected function tearDown()
