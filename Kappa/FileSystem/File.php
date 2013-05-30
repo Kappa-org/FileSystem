@@ -225,6 +225,31 @@ class File extends FileSystem
 	}
 
 	/**
+	 * @param string $pattern
+	 * @return bool
+	 */
+	public function corresponds($pattern)
+	{
+		if((bool)preg_match($pattern, $this->read())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * @param $pattern
+	 * @param string|null $replace
+	 * @return $this
+	 */
+	public function replace($pattern, $replace = null)
+	{
+		$content = preg_replace($pattern, $replace, $this->read());
+		$this->overwrite($content);
+		return $this;
+	}
+
+	/**
 	 * @param string $path
 	 * @return string
 	 * @throws IOException

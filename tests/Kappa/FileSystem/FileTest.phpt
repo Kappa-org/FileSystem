@@ -207,6 +207,21 @@ class FileTest extends TestCase
 		Assert::true(file_exists($path));
 	}
 
+	public function testCorresponds()
+	{
+		$this->prepare();
+		Assert::true($this->file->corresponds("#Hello#"));
+		Assert::false($this->file->corresponds("#\s{5}#"));
+	}
+
+	public function testReplace()
+	{
+		$this->prepare();
+		Assert::same("Hello world!", $this->file->read());
+		$this->file->replace("#Hello#", "Bay");
+		Assert::same("Bay world!", $this->file->read());
+	}
+
 	private function prepare()
 	{
 		\Tester\Helpers::purge($this->directory);
