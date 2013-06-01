@@ -27,9 +27,9 @@
 	},
 
 	"autoload": {
-		"psr-0": {"Kappa": "./"},
+		"psr-0": {"Kappa": "src/"},
 		"classmap": [
-			"Kappa/FileSystem/exceptions.php"
+			"src/Kappa/FileSystem/exceptions.php"
 		]
 	}
 }
