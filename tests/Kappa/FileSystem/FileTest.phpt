@@ -50,8 +50,9 @@ class FileTest extends TestCase
 		Assert::type('\Kappa\FileSystem\File', $this->file->overwrite("Hello world!"));
 		Assert::same("Hello world!", file_get_contents($this->file->getInfo()->getPathname()));
 
-		Assert::throws(function() {
-			$this->file->overwrite(array("some"));
+		$self = $this;
+		Assert::throws(function() use($self){
+			$self->file->overwrite(array("some"));
 		}, $this->exceptions['inv']);
 
 		$this->restore();
