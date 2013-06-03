@@ -236,8 +236,11 @@ class Directory extends FileSystem
 	{
 		$files = $obj->getFiles();
 		$directories = $obj->getDirectories();
+		/** @var $file \Kappa\FileSystem\Directory */
 		foreach ($files as $path => $file) {
-			copy($path, $copyDir . DIRECTORY_SEPARATOR . $file->getInfo()->getBasename());
+			if(!in_array($file->getInfo()->getBasename(), $ignore)) {
+				copy($path, $copyDir . DIRECTORY_SEPARATOR . $file->getInfo()->getBasename());
+			}
 		}
 		/** @var $directory \Kappa\FileSystem\Directory */
 		foreach ($directories as $path => $directory) {
