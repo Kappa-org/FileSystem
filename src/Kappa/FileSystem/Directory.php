@@ -29,7 +29,7 @@ class Directory extends FileSystem
 		if (!is_string($path)) {
 			throw new InvalidArgumentException(__METHOD__ . " Argument must to be string, " . gettype($path) . " given");
 		}
-		$this->path = (file_exists($path)) ? realpath($path) : realpath($this->create($path));
+		$this->path = (file_exists($path)) ? realpath($path) : $this->create($path);
 		parent::__construct($this->path);
 	}
 
@@ -244,7 +244,7 @@ class Directory extends FileSystem
 	private function create($path)
 	{
 		if (true === @mkdir($path, 0777)) {
-			return $path;
+			return realpath($path);
 		} else {
 			throw new IOException("Failed to create directory '$path'");
 		}
