@@ -15,6 +15,7 @@ use Kappa\FileSystem\File;
 use Kappa\FileSystem\SplFileInfo;
 use Kappa\Tester\TestCase;
 use Tester\Assert;
+use Tester\Helpers;
 
 require_once __DIR__ . '/../bootstrap.php';
 
@@ -25,151 +26,152 @@ class DirectoryTest extends TestCase
 		'io' => '\Kappa\FileSystem\IOException',
 	);
 
-	/** @var string */
+	/** @var \Kappa\FileSystem\Directory */
 	private $directory;
 
 	/** @var string */
 	private $path;
 
-	/** @var \Kappa\FileSystem\Directory */
-	private $dir;
-
 	protected function setUp()
 	{
-		if(!is_dir(__DIR__ . '/../../data/dir'))
-			@mkdir(__DIR__ . '/../../data/dir');
-		$this->directory = __DIR__ . '/../../data/dir';
-		$this->path = $this->directory . '/directory';
-		$this->dir = new Directory($this->path);
-	}
-
-	public function testConstruct()
-	{
-		// Exist directory
-		Assert::true(file_exists($this->directory));
-		Assert::true(new Directory($this->directory) instanceof Directory);
-		Assert::true(file_exists($this->directory));
-
-		// Non-exist directory
-		$path = $this->directory . '/non-exist';
-		Assert::false(file_exists($path));
-		Assert::true(new Directory($path) instanceof Directory);
-		Assert::true(file_exists($path));
-
-		Assert::throws(function () {
-			new Directory(array("test"));
-		}, $this->exceptions['inv']);
+		$this->path = __DIR__ . '/../../data/dir';
+		Assert::false(file_exists($this->path . '/testDirectory'));
+		$this->restore();
+		Assert::true(file_exists($this->path . '/testDirectory'));
 	}
 
 	public function testRemove()
 	{
-		Assert::true(file_exists($this->path));
-		Assert::true($this->dir->remove() instanceof Directory);
-		Assert::false(file_exists($this->path));
-
-	}
-
-	public function testRename()
-	{
-		$rename = $this->directory . '/renamedDir';
-		Assert::true(file_exists($this->path));
-		Assert::false(file_exists($rename));
-		Assert::true($this->dir->rename("renamedDir") instanceof Directory);
-		Assert::false(file_exists($this->path));
-		Assert::true(file_exists($rename));
+		Assert::false(file_exists($this->path . '/forDelete'));
+		$directory = new Directory($this->path . '/forDelete');
+		Assert::true(file_exists($this->path . '/forDelete'));
+		Assert::type('\Kappa\FileSystem\Directory', $directory->remove());
+		Assert::false(file_exists($this->path . '/forDelete'));
 	}
 
 	public function testGetInfo()
 	{
-		Assert::equal(new SplFileInfo($this->path), $this->dir->getInfo());
+		Assert::equal(new SplFileInfo($this->path), $this->directory->getInfo());
 	}
 
 	public function testGetContent()
 	{
-		mkdir($this->path . '/test');
-		Assert::equal(array(realpath($this->path . '/test') => new \SplFileInfo($this->path . '/test')), $this->dir->getContent());
+		mkdir($this->directory->getInfo()->getPathname() . '/test');
+		$file = new File($this->directory->getInfo()->getPathname() . '/test.txt');
+		Assert::equal(array(
+			realpath($this->directory->getInfo()->getPathname() . '/test') => new Directory($this->directory->getInfo()->getPathname() . '/test'),
+			realpath($this->directory->getInfo()->getPathname() . '/test.txt') => $file
+		), $this->directory->getContent());
+
+		$this->restore();
 	}
 
 	public function testGetFiles()
 	{
-		$file = @fopen($this->path . '/test.txt', 'w+');
-		@fwrite($file, "");
-		@fclose($file);
-		Assert::equal(array(realpath($this->path . '/test.txt') => new File($this->path . '/test.txt')), $this->dir->getFiles());
+		new File($this->directory->getInfo()->getPathname() . '/test.txt');
+		Assert::equal(array(realpath($this->directory->getInfo()->getPathname() . '/test.txt') => new File($this->directory->getInfo()->getPathname() . '/test.txt')), $this->directory->getFiles());
+
+		$this->restore();
 	}
 
 	public function testGetDirectories()
 	{
-		mkdir($this->path . '/test');
-		Assert::equal(array(realpath($this->path . '/test') => new Directory($this->path . '/test')), $this->dir->getDirectories());
+		mkdir($this->directory->getInfo()->getPathname() . '/test');
+		Assert::equal(array(realpath($this->directory->getInfo()->getPathname() . '/test') => new Directory($this->directory->getInfo()->getPathname() . '/test')), $this->directory->getDirectories());
 	}
 
-	public function testCopy()
+	public function testRename()
 	{
-		$copyPath = $this->directory . '/afterCopy';
-		$file = @fopen($this->path . '/test.txt', 'w+');
-		@fwrite($file, "");
-		@fclose($file);
-		mkdir($this->path . '/test');
-		Assert::false(file_exists($copyPath));
-		Assert::true(file_exists($this->path));
-		Assert::true($this->dir->copy($copyPath) instanceof Directory);
-		Assert::true(file_exists($copyPath));
-		Assert::true(file_exists($this->path));
+		Assert::true(file_exists($this->directory->getInfo()->getPathname()));
+		Assert::false(file_exists($this->path . '/renamedDirectory'));
+		Assert::type('\Kappa\FileSystem\Directory', $directory = $this->directory->rename('renamedDirectory'));
+		Assert::false(file_exists($this->directory->getInfo()->getPathname()));
+		Assert::true(file_exists($directory->getInfo()->getPathname()));
+
+		$this->restore();
+
+		mkdir($this->path . '/renamedDirectory');
+		Assert::throws(function(){
+			$this->directory->rename('renamedDirectory');
+		}, $this->exceptions['io']);
+		Assert::type('\Kappa\FileSystem\Directory', $this->directory->rename('renamedDirectory', true));
+		Assert::false(file_exists($this->path . '/testDirectory'));
+
+		$this->restore();
 
 		Assert::throws(function () {
-			$directory = new Directory( __DIR__ . '/../../data/dir/directory');
-			$directory->copy(array("test"));
+			$this->directory->rename(array('some'));
 		}, $this->exceptions['inv']);
 		Assert::throws(function () {
-			$directory = new Directory( __DIR__ . '/../../data/dir/directory');
-			$directory->copy("test", array(), array("test"));
-		}, $this->exceptions['inv']);
-		Assert::throws(function () {
-			$directory = new Directory( __DIR__ . '/../../data/dir/directory');
-			$directory->copy("test", array(), true, array("test"));
-		}, $this->exceptions['inv']);
-	}
-
-	public function testMove()
-	{
-		$copyPath = $this->directory . '/afterMove';
-		$file = @fopen($this->path . '/test.txt', 'w+');
-		@fwrite($file, "");
-		@fclose($file);
-		mkdir($this->path . '/test');
-		Assert::false(file_exists($copyPath));
-		Assert::true(file_exists($this->path));
-		Assert::true($this->dir->move($copyPath) instanceof Directory);
-		Assert::true(file_exists($copyPath));
-		Assert::false(file_exists($this->path));
-
-		Assert::throws(function () {
-			$directory = new Directory( __DIR__ . '/../../data/dir/directory');
-			$directory->move(array("test"));
-		}, $this->exceptions['inv']);
-		Assert::throws(function () {
-			$directory = new Directory( __DIR__ . '/../../data/dir/directory');
-			$directory->move("test", array("test"));
+			$this->directory->rename('some', array('some'));
 		}, $this->exceptions['inv']);
 	}
 
 	public function testAppend()
 	{
-		$_file = new File($this->directory . '/../dir/test.txt');
-		Assert::false(file_exists($this->path . '/test.txt'));
-		Assert::true($this->dir->append($_file) instanceof Directory);
-		Assert::true(file_exists($this->path . '/test.txt'));
+		$file = new File($this->path . '/append.txt');
+		Assert::false(file_exists($this->directory->getInfo()->getPathname() . '/append.txt'));
+		Assert::type('\Kappa\FileSystem\Directory', $this->directory->append($file));
+		Assert::true(file_exists($this->directory->getInfo()->getPathname() . '/append.txt'));
+
+		$this->restore();
 	}
 
-	private function prepare()
+	public function testCopy()
 	{
-		\Tester\Helpers::purge($this->directory);
+		new File($this->directory->getInfo()->getPathname() . '/test.txt');
+		Assert::true(file_exists($this->directory->getInfo()->getPathname()));
+		Assert::true(file_exists($this->directory->getInfo()->getPathname() . '/test.txt'));
+		Assert::false(file_exists($this->path . '/copyDirectory'));
+		Assert::false(file_exists($this->path . '/copyDirectory/test.txt'));
+		Assert::type('\Kappa\FileSystem\Directory', $directory = $this->directory->copy($this->path . '/copyDirectory'));
+		Assert::notSame($this->directory, $directory);
+		Assert::true(file_exists($this->directory->getInfo()->getPathname()));
+		Assert::true(file_exists($directory->getInfo()->getPathname()));
+		Assert::true(file_exists($directory->getInfo()->getPathname() . '/test.txt'));
+
+		$this->restore();
+
+		Assert::type('\Kappa\FileSystem\Directory', $directory = $this->directory->copy($this->path . '/copyDirectory', array(), false));
+		Assert::same($this->directory, $directory);
+
+		$this->restore();
+
+		$file = new File($this->directory->getInfo()->getPathname() . '/test.txt');
+		Assert::type('\Kappa\FileSystem\Directory', $directory = $this->directory->copy($this->path . '/copyDirectory', array("test.txt")));
+		Assert::true(file_exists($directory->getInfo()->getPathname()));
+		Assert::false(file_exists($directory->getInfo()->getPathname() . '/test.txt'));
+
+		$this->restore();
+	}
+
+	public function testMove()
+	{
+		new File($this->directory->getInfo()->getPathname() . '/test.txt');
+		Assert::true(file_exists($this->directory->getInfo()->getPathname()));
+		Assert::true(file_exists($this->directory->getInfo()->getPathname() . '/test.txt'));
+		Assert::false(file_exists($this->path . '/moveDirectory'));
+		Assert::false(file_exists($this->path . '/moveDirectory/test.txt'));
+		Assert::type('\Kappa\FileSystem\Directory', $directory = $this->directory->move($this->path . '/moveDirectory'));
+		Assert::false(file_exists($this->directory->getInfo()->getPathname()));
+		Assert::false(file_exists($this->directory->getInfo()->getPathname() . '/test.txt'));
+		Assert::true(file_exists($directory->getInfo()->getPathname()));
+		Assert::true(file_exists($directory->getInfo()->getPathname() . '/test.txt'));
+
+		$this->restore();
+
+		// All test same as testCopy()
+	}
+
+	private function restore()
+	{
+		Helpers::purge($this->path);
+		$this->directory = new Directory($this->path . '/testDirectory');
 	}
 
 	protected function tearDown()
 	{
-		$this->prepare();
+		\Tester\Helpers::purge($this->path);
 	}
 }
 
