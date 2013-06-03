@@ -144,7 +144,7 @@ class File extends FileSystem
 	 * @param File $file
 	 * @return bool
 	 */
-	public function compare(File $file)
+	public function isSame(File $file)
 	{
 		if ($this->getHash() === $file->getHash()) {
 			return true;
