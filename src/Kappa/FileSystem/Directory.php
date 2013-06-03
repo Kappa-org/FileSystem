@@ -49,9 +49,13 @@ class Directory extends FileSystem
 			throw new InvalidArgumentException(__METHOD__ . " Second argument must to be bool, " . gettype($overwrite) . " given");
 		}
 		$newPath = $this->getInfo()->getPath() . DIRECTORY_SEPARATOR . $newName;
-		if (file_exists($newPath) && !$overwrite) {
+		if (is_dir($newPath) && !$overwrite) {
 			throw new IOException("Failed to rename to '$newPath', because file $newPath already exist");
 		} else {
+			if(is_dir($newPath)) {
+				$directory = new Directory($newPath);
+				$directory->remove();
+			}
 			if (true === @rename($this->path, $newPath)) {
 				return new Directory($newPath);
 			} else {
