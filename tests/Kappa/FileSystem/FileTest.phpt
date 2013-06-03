@@ -7,7 +7,7 @@
  *
  * @package Kappa
  */
- 
+
 namespace Kappa\Tests\FileSystem\File;
 
 use Kappa\FileSystem\File;
@@ -50,9 +50,8 @@ class FileTest extends TestCase
 		Assert::type('\Kappa\FileSystem\File', $this->file->overwrite("Hello world!"));
 		Assert::same("Hello world!", file_get_contents($this->file->getInfo()->getPathname()));
 
-		$self = $this;
-		Assert::throws(function() use($self){
-			$self->file->overwrite(array("some"));
+		Assert::throws(function () {
+			$this->file->overwrite(array("some"));
 		}, $this->exceptions['inv']);
 
 		$this->restore();
@@ -76,10 +75,10 @@ class FileTest extends TestCase
 		Assert::type('\Kappa\FileSystem\File', $this->file->append('Kappa\Tester', false));
 		Assert::same('Hello world!' . PHP_EOL . 'Test write by Kappa\Tester', file_get_contents($this->file->getInfo()->getPathname()));
 
-		Assert::throws(function(){
+		Assert::throws(function () {
 			$this->file->append(array('some'));
 		}, $this->exceptions['inv']);
-		Assert::throws(function(){
+		Assert::throws(function () {
 			$this->file->append('some', array('some'));
 		}, $this->exceptions['inv']);
 
@@ -140,7 +139,7 @@ class FileTest extends TestCase
 		Assert::type('\Kappa\FileSystem\File', $file);
 
 		new File($this->path . '/existFile.txt');
-		Assert::throws(function () use($file){
+		Assert::throws(function () use ($file) {
 			$file->rename('existFile.txt');
 		}, $this->exceptions['io']);
 		Assert::true(file_exists($this->path . '/renamedFile.txt'));
@@ -162,7 +161,7 @@ class FileTest extends TestCase
 		Assert::type('\Kappa\FileSystem\File', $file = $this->file->copy($this->path . '/copyFile.txt', false));
 		Assert::same($this->file, $file);
 		Assert::type('\Kappa\FileSystem\File', $file = $this->file->copy($this->path . '/copyFile.txt', false, true));
-		Assert::throws(function() {
+		Assert::throws(function () {
 			$this->file->copy($this->path . '/copyFile.txt');
 		}, $this->exceptions['io']);
 		unlink($this->path . '/copyFile.txt');
@@ -192,4 +191,5 @@ class FileTest extends TestCase
 	/** Providers */
 
 }
+
 \run(new FileTest());
