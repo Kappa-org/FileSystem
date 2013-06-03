@@ -29,7 +29,7 @@ class File extends FileSystem
 		if (!is_string($path)) {
 			throw new InvalidArgumentException(__METHOD__ . " Argument must to be string, " . gettype($path) . " given");
 		}
-		$this->path = (file_exists($path) && is_file($path)) ? realpath($path) : realpath($this->create($path));
+		$this->path = (is_file($path) && is_writable($path)) ? realpath($path) : $this->create($path);
 		parent::__construct($this->path);
 	}
 
@@ -81,7 +81,7 @@ class File extends FileSystem
 		if (!is_bool($newLine)) {
 			throw new InvalidArgumentException(__METHOD__ . " Second argument must to be bool, " . gettype($newLine) . " given");
 		}
-		$actual = file_get_contents($this->path);
+		$actual = $this->read();
 		if ($actual) {
 			$_content = $actual;
 			$_content .= ($newLine) ? PHP_EOL . $content : " " . $content;
@@ -172,7 +172,7 @@ class File extends FileSystem
 		if (!is_bool($overwrite)) {
 			throw new InvalidArgumentException(__METHOD__ . " Third argument must to be bool, " . gettype($overwrite) . " given");
 		}
-		if (file_exists($target) && !$overwrite) {
+		if (is_file($target) && !$overwrite) {
 			throw new IOException("Failed to copy file to '$target', because file already exist");
 		} else {
 			if (true === @copy($this->path, $target)) {
@@ -198,7 +198,7 @@ class File extends FileSystem
 		if (!is_bool($overwrite)) {
 			throw new InvalidArgumentException(__METHOD__ . " Second argument must to be bool, " . gettype($overwrite) . " given");
 		}
-		if (file_exists($target) && !$overwrite) {
+		if (is_file($target) && !$overwrite) {
 			throw new IOException("Failed to move file to '$target'");
 		} else {
 			$file = $this->copy($target, true, $overwrite);
@@ -259,7 +259,7 @@ class File extends FileSystem
 		$file = @fopen($path, 'w+');
 		@fclose($file);
 		if (file_exists($path)) {
-			return $path;
+			return realpath($path);
 		} else {
 			throw new IOException("Failed to create file '$path'");
 		}
