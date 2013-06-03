@@ -228,26 +228,24 @@ class Directory extends FileSystem
 	}
 
 	/**
-	 * @param Directory $obj
+	 * @param Directory $directory
 	 * @param string $copyDir
 	 * @param array $ignore
 	 */
-	private function _copy(Directory $obj, $copyDir, array $ignore = array())
+	private function _copy(Directory $directory, $copyDir, array $ignore = array())
 	{
-		$files = $obj->getFiles();
-		$directories = $obj->getDirectories();
-		/** @var $file \Kappa\FileSystem\Directory */
-		foreach ($files as $path => $file) {
-			if(!in_array($file->getInfo()->getBasename(), $ignore)) {
-				copy($path, $copyDir . DIRECTORY_SEPARATOR . $file->getInfo()->getBasename());
+		/** @var $obj \Kappa\FileSystem\File|\Kappa\FileSystem\Directory */
+		foreach($directory->getContent() as $path => $obj) {
+			if($obj instanceof File) {
+				if(!in_array($obj->getInfo()->getBasename(), $ignore)) {
+					copy($path, $copyDir . DIRECTORY_SEPARATOR . $obj->getInfo()->getBasename());
+				}
 			}
-		}
-		/** @var $directory \Kappa\FileSystem\Directory */
-		foreach ($directories as $path => $directory) {
-			if(!in_array($directory->getInfo()->getBasename(), $ignore)) {
-				$d = new Directory($path);
-				$copyDir = $this->create($copyDir . DIRECTORY_SEPARATOR . $directory->getInfo()->getBasename());
-				$this->_copy($d, $copyDir);
+			if($obj instanceof Directory) {
+				if(!in_array($obj->getInfo()->getBasename(), $ignore)) {
+					$newCopy = $this->create($copyDir . DIRECTORY_SEPARATOR . $obj->getInfo()->getBasename());
+					$this->_copy($obj, $newCopy);
+				}
 			}
 		}
 	}
