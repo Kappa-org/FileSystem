@@ -96,7 +96,17 @@ class Directory extends FileSystem
 	 */
 	public function getContent()
 	{
-		return iterator_to_array(new \FilesystemIterator($this->path));
+		$it = iterator_to_array(new \FilesystemIterator($this->path));
+		/** @var $file \SplFileInfo */
+		foreach($it as $path => $file) {
+			if($file->isFile()) {
+				$output[$path] = new File($file->getPathname());
+			}
+			if($file->isDir()) {
+				$output[$path] = new Directory($file->getPathname());
+			}
+		}
+		return (isset($output)) ? $output : array();
 	}
 
 	/**
