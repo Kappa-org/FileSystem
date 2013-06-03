@@ -228,7 +228,7 @@ class File extends FileSystem
 	 * @param string $pattern
 	 * @return bool
 	 */
-	public function corresponds($pattern)
+	public function isContained($pattern)
 	{
 		if((bool)preg_match($pattern, $this->read())) {
 			return true;
