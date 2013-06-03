@@ -53,8 +53,7 @@ class Directory extends FileSystem
 			throw new IOException("Failed to rename to '$newPath', because file $newPath already exist");
 		} else {
 			if (true === @rename($this->path, $newPath)) {
-				$this->path = realpath($newPath);
-				return $this;
+				return new Directory($newPath);
 			} else {
 				throw new IOException("Failed to rename from '$this->path' to '$newPath'");
 			}
