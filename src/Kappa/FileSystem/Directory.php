@@ -128,13 +128,14 @@ class Directory extends FileSystem
 
 	/**
 	 * @param string $target
+	 * @param array $ignore
 	 * @param bool $returnNew
 	 * @param bool $overwrite
 	 * @return Directory
 	 * @throws InvalidArgumentException
 	 * @throws IOException
 	 */
-	public function copy($target, $returnNew = true, $overwrite = false)
+	public function copy($target, array $ignore = array(), $returnNew = true, $overwrite = false)
 	{
 		if (!is_string($target)) {
 			throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($target) . " given");
@@ -149,7 +150,7 @@ class Directory extends FileSystem
 			throw new IOException("Failed to copy directory '$target'");
 		} else {
 			$dir = $this->create($target);
-			$this->_copy($this, $dir);
+			$this->_copy($this, $dir, $ignore);
 			return ($returnNew) ? new Directory($dir) : $this;
 		}
 	}
@@ -172,14 +173,14 @@ class Directory extends FileSystem
 		if (file_exists($target) && !$overwrite) {
 			throw new IOException("Failed to copy directory '$target'");
 		} else {
-			$this->copy($target, true, $overwrite);
+			$this->copy($target, array(), true, $overwrite);
 			$this->remove();
 			return new Directory($target);
 		}
 	}
 
 	/**
-	 * @param File|Directory $object
+	 * @param Directory|File $object
 	 * @param bool $move
 	 * @param bool $returnNew
 	 * @param bool $overwrite
@@ -213,18 +214,22 @@ class Directory extends FileSystem
 	/**
 	 * @param Directory $obj
 	 * @param string $copyDir
+	 * @param array $ignore
 	 */
-	private function _copy(Directory $obj, $copyDir)
+	private function _copy(Directory $obj, $copyDir, array $ignore = array())
 	{
 		$files = $obj->getFiles();
 		$directories = $obj->getDirectories();
 		foreach ($files as $path => $file) {
 			copy($path, $copyDir . DIRECTORY_SEPARATOR . $file->getInfo()->getBasename());
 		}
+		/** @var $directory \Kappa\FileSystem\Directory */
 		foreach ($directories as $path => $directory) {
-			$d = new Directory($path);
-			$copyDir = $this->create($copyDir . DIRECTORY_SEPARATOR . $directory->getInfo()->getBasename());
-			$this->_copy($d, $copyDir);
+			if(!in_array($directory->getInfo()->getBasename(), $ignore)) {
+				$d = new Directory($path);
+				$copyDir = $this->create($copyDir . DIRECTORY_SEPARATOR . $directory->getInfo()->getBasename());
+				$this->_copy($d, $copyDir);
+			}
 		}
 	}
 

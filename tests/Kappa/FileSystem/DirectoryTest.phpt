@@ -123,11 +123,11 @@ class DirectoryTest extends TestCase
 		}, $this->exceptions['inv']);
 		Assert::throws(function () {
 			$directory = new Directory( __DIR__ . '/../../data/dir/directory');
-			$directory->copy("test", array("test"));
+			$directory->copy("test", array(), array("test"));
 		}, $this->exceptions['inv']);
 		Assert::throws(function () {
 			$directory = new Directory( __DIR__ . '/../../data/dir/directory');
-			$directory->copy("test", true, array("test"));
+			$directory->copy("test", array(), true, array("test"));
 		}, $this->exceptions['inv']);
 	}
 
