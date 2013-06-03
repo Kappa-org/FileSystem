@@ -69,6 +69,7 @@ class Directory extends FileSystem
 	public function remove()
 	{
 		$it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->path), \RecursiveIteratorIterator::CHILD_FIRST);
+		/** @var $file \SplFileInfo */
 		foreach ($it as $file) {
 			if (in_array($file->getBasename(), array('.', '..'))) {
 				continue;
@@ -104,6 +105,7 @@ class Directory extends FileSystem
 	public function getFiles()
 	{
 		$files = iterator_to_array(new \FilesystemIterator($this->path));
+		/** @var $file \SplFileInfo */
 		foreach ($files as $path => $file) {
 			if ($file->isFile()) {
 				$output[$path] = new File($path);
@@ -118,6 +120,7 @@ class Directory extends FileSystem
 	public function getDirectories()
 	{
 		$files = iterator_to_array(new \FilesystemIterator($this->path));
+		/** @var $file \SplFileInfo */
 		foreach ($files as $path => $file) {
 			if ($file->isDir()) {
 				$output[$path] = new Directory($path);
