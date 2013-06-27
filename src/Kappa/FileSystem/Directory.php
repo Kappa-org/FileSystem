@@ -12,7 +12,6 @@ namespace Kappa\FileSystem;
 
 /**
  * Class Directory
- *
  * @package Kappa\FileSystem
  */
 class Directory extends FileSystem
