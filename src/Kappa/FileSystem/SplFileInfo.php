@@ -1,11 +1,11 @@
 <?php
 /**
- * SplFileInfo.php
+ * This file is part of the ${PACKAGE} package.
  *
- * @author Ondřej Záruba <zarubaondra@gmail.com>
- * @date 10.5.13
+ * (c) Ondřej Záruba <zarubaondra@gmail.com>
  *
- * @package Kappa\FileSystem
+ * For the full copyright and license information, please view the license.md
+ * file that was distributed with this source code.
  */
 
 namespace Kappa\FileSystem;
@@ -22,7 +22,7 @@ class SplFileInfo extends \SplFileInfo
 	 */
 	public function __construct($file)
 	{
-		parent::__construct($file);
+		parent::__construct(realpath($file));
 	}
 
 	/**

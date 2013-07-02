@@ -1,69 +1,50 @@
 <?php
 /**
- * File.php
+ * This file is part of the Kappa package.
  *
- * @author Ondřej Záruba <zarubaondra@gmail.com>
- * @date 1.5.13
+ * (c) Ondřej Záruba <zarubaondra@gmail.com>
  *
- * @package Kappa\FileSystem
+ * For the full copyright and license information, please view the license.md
+ * file that was distributed with this source code.
  */
 
 namespace Kappa\FileSystem;
 
 /**
  * Class File
- *
  * @package Kappa\FileSystem
  */
 class File extends FileSystem
 {
-	/** @var string */
-	private $path;
-
 	/**
-	 * @param string $path
-	 * @throws InvalidArgumentException
-	 */
-	public function __construct($path)
-	{
-		if (!is_string($path)) {
-			throw new InvalidArgumentException(__METHOD__ . " Argument must to be string, " . gettype($path) . " given");
-		}
-		$this->path = (is_file($path) && is_writable($path)) ? realpath($path) : $this->create($path);
-		parent::__construct($this->path);
-	}
-
-	/**
-	 * @param string|null $content
-	 * @return $this
+	 * @param null $content
+	 * @return bool
 	 * @throws InvalidArgumentException
 	 * @throws IOException
 	 */
 	public function overwrite($content = null)
 	{
-		if ($content && !is_string($content) && !is_numeric($content)) {
-			throw new InvalidArgumentException(__METHOD__ . " Argument must to be string or null, " . gettype($content) . " given");
-		}
-		$file = @fopen($this->path, 'w');
-		@fwrite($file, $content);
-		if (true === (bool)@fclose($file)) {
-			return $this;
+		if($this->isCreated()) {
+			if($content && !is_string($content) && !is_numeric($content)) {
+				throw new InvalidArgumentException(__METHOD__ . " First argument expect to be string, null or number, " . gettype($content) . " given");
+			}
+			@file_put_contents($this->path, $content);
+			if((string)$content === $this->read()) {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
-			throw new IOException("Failed to overwrite file '$this->path'");
+			throw new IOException("File {$this->path} must be firstly created");
 		}
 	}
 
 	/**
-	 * @return $this
-	 * @throws IOException
+	 * @return bool
 	 */
 	public function clean()
 	{
-		if ($this->overwrite(null)) {
-			return $this;
-		} else {
-			throw new IOException("Failed to clean file '$this->path'");
-		}
+		return $this->overwrite(null);
 	}
 
 	/**
@@ -76,10 +57,7 @@ class File extends FileSystem
 	public function append($content = null, $newLine = true)
 	{
 		if ($content && !is_string($content) && !is_numeric($content)) {
-			throw new InvalidArgumentException(__METHOD__ . " First argument must to be string or null, " . gettype($content) . " given");
-		}
-		if (!is_bool($newLine)) {
-			throw new InvalidArgumentException(__METHOD__ . " Second argument must to be bool, " . gettype($newLine) . " given");
+			throw new InvalidArgumentException(__METHOD__ . " First argument expect to string, null or number, " . gettype($content) . " given");
 		}
 		$actual = $this->read();
 		if ($actual) {
@@ -88,67 +66,46 @@ class File extends FileSystem
 		} else {
 			$_content = $content;
 		}
-		if ($this->overwrite($_content)) {
-			return $this;
-		} else {
-			throw new IOException("Failed to append to file '$this->path'");
-		}
+		return $this->overwrite($_content);
 	}
 
 	/**
 	 * @return string
+	 * @throws IOException
 	 */
 	public function read()
 	{
-		return file_get_contents($this->path);
-	}
-
-	/**
-	 * @param string $newName
-	 * @param bool $overwrite
-	 * @return $this
-	 * @throws InvalidArgumentException
-	 * @throws IOException
-	 */
-	public function rename($newName, $overwrite = false)
-	{
-		if (!is_string($newName)) {
-			throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($newName) . " given");
-		}
-		if (!is_bool($overwrite)) {
-			throw new InvalidArgumentException(__METHOD__ . " Second argument must to be bool, " . gettype($overwrite) . " given");
-		}
-		$newPath = $this->getInfo()->getPath() . DIRECTORY_SEPARATOR . $newName;
-		if (file_exists($newPath) && !$overwrite) {
-			throw new IOException("Failed to rename to '$newPath', because file $newPath already exist");
+		if($this->isCreated()) {
+			return file_get_contents($this->path);
 		} else {
-			if (true === @rename($this->path, $newPath)) {
-				return new File($newPath);
-			} else {
-				throw new IOException("Failed to rename from '$this->path' to '$newPath'");
-			}
+			throw new IOException("File {$this->path} must be firstly created");
 		}
-
 	}
 
 	/**
 	 * @return string
+	 * @throws IOException
 	 */
 	public function getHash()
 	{
-		return md5_file($this->path);
+		if($this->isCreated()) {
+			return md5_file($this->path);
+		} else {
+			throw new IOException("File {$this->path} must be firstly created");
+		}
 	}
 
 	/**
-	 * @param File $file
 	 * @return bool
+	 * @throws IOException
 	 */
-	public function isSame(File $file)
+	public function remove()
 	{
-		if ($this->getHash() === $file->getHash()) {
-			return true;
-		} else {
-			return false;
+		if($this->isCreated()) {
+			@unlink($this->path);
+			return !$this->isCreated();
+	 	} else {
+			throw new IOException("File {$this->path} must be firstly created");
 		}
 	}
 
@@ -162,23 +119,21 @@ class File extends FileSystem
 	 */
 	public function copy($target, $returnNew = true, $overwrite = false)
 	{
-		if (!is_string($target)) {
-			throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($target) . " given");
-		}
-		if (!is_bool($returnNew)) {
-			throw new InvalidArgumentException(__METHOD__ . " Second argument must to be bool, " . gettype($overwrite) . " given");
-		}
-		if (!is_bool($overwrite)) {
-			throw new InvalidArgumentException(__METHOD__ . " Third argument must to be bool, " . gettype($overwrite) . " given");
-		}
-		if (is_file($target) && !$overwrite) {
-			throw new IOException("Failed to copy file to '$target', because file already exist");
-		} else {
-			if (true === @copy($this->path, $target)) {
-				return ($returnNew) ? new  File($target) : $this;
-			} else {
-				throw new IOException("Failed to copy file '$target'");
+		if($this->isCreated()) {
+			if (!is_string($target)) {
+				throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($target) . " given");
 			}
+			if (is_file($target) && !$overwrite) {
+				throw new IOException("Failed to copy file to '$target', because file already exist");
+			} else {
+				if (@copy($this->path, $target) === true) {
+					return ($returnNew) ? new File($target, File::INTUITIVE) : true;
+				} else {
+					return false;
+				}
+			}
+		} else {
+			throw new IOException("File {$this->path} must be firstly created");
 		}
 	}
 
@@ -194,73 +149,16 @@ class File extends FileSystem
 		if (!is_string($target)) {
 			throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($target) . " given");
 		}
-		if (!is_bool($overwrite)) {
-			throw new InvalidArgumentException(__METHOD__ . " Second argument must to be bool, " . gettype($overwrite) . " given");
-		}
 		if (is_file($target) && !$overwrite) {
-			throw new IOException("Failed to move file to '$target'");
+			throw new IOException("Failed to move file to {$target}");
 		} else {
 			$file = $this->copy($target, true, $overwrite);
-			if (true === $this->remove()) {
-				return $file;
+			if (true === $this->remove() && $file->isCreated()) {
+				$this->path = realpath($file->getInfo()->getPathname());
+				return true;
 			} else {
-				throw new IOException("Failed to move file '$this->path'");
+				return false;
 			}
-		}
-	}
-
-	/**
-	 * @return bool
-	 * @throws IOException
-	 */
-	public function remove()
-	{
-		if (true === @unlink($this->path)) {
-			$this->path = null;
-			return true;
-		} else {
-			throw new IOException("Failed to remove file '$this->path'");
-		}
-	}
-
-	/**
-	 * @param string $pattern
-	 * @return bool
-	 */
-	public function isContained($pattern)
-	{
-		if((bool)preg_match($pattern, $this->read())) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * @param $pattern
-	 * @param string|null $replace
-	 * @return $this
-	 */
-	public function replace($pattern, $replace = null)
-	{
-		$content = preg_replace($pattern, $replace, $this->read());
-		$this->overwrite($content);
-		return $this;
-	}
-
-	/**
-	 * @param string $path
-	 * @return string
-	 * @throws IOException
-	 */
-	private function create($path)
-	{
-		$file = @fopen($path, 'w+');
-		@fclose($file);
-		if (file_exists($path)) {
-			return realpath($path);
-		} else {
-			throw new IOException("Failed to create file '$path'");
 		}
 	}
 }

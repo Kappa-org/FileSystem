@@ -1,11 +1,11 @@
 <?php
 /**
- * Directory.php
+ * This file is part of the Kappa package.
  *
- * @author Ondřej Záruba <zarubaondra@gmail.com>
- * @date 1.5.13
+ * (c) Ondřej Záruba <zarubaondra@gmail.com>
  *
- * @package Kappa\FileSystem
+ * For the full copyright and license information, please view the license.md
+ * file that was distributed with this source code.
  */
 
 namespace Kappa\FileSystem;
@@ -15,100 +15,27 @@ namespace Kappa\FileSystem;
  * @package Kappa\FileSystem
  */
 class Directory extends FileSystem
-{
-	/** @var string|null */
-	private $path;
-
-	/**
-	 * @param string $path
-	 * @throws InvalidArgumentException
-	 */
-	public function __construct($path)
-	{
-		if (!is_string($path)) {
-			throw new InvalidArgumentException(__METHOD__ . " Argument must to be string, " . gettype($path) . " given");
-		}
-		$this->path = (file_exists($path)) ? realpath($path) : $this->create($path);
-		parent::__construct($this->path);
-	}
-
-	/**
-	 * @param string $newName
-	 * @param bool $overwrite
-	 * @return $this
-	 * @throws InvalidArgumentException
-	 * @throws IOException
-	 */
-	public function rename($newName, $overwrite = false)
-	{
-		if (!is_string($newName)) {
-			throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($newName) . " given");
-		}
-		if (!is_bool($overwrite)) {
-			throw new InvalidArgumentException(__METHOD__ . " Second argument must to be bool, " . gettype($overwrite) . " given");
-		}
-		$newPath = $this->getInfo()->getPath() . DIRECTORY_SEPARATOR . $newName;
-		if (is_dir($newPath) && !$overwrite) {
-			throw new IOException("Failed to rename to '$newPath', because file $newPath already exist");
-		} else {
-			if(is_dir($newPath)) {
-				$directory = new Directory($newPath);
-				$directory->remove();
-			}
-			if (true === @rename($this->path, $newPath)) {
-				return new Directory($newPath);
-			} else {
-				throw new IOException("Failed to rename from '$this->path' to '$newPath'");
-			}
-		}
-
-	}
-
-	/**
-	 * @return $this
-	 * @throws IOException
-	 */
-	public function remove()
-	{
-		$it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->path), \RecursiveIteratorIterator::CHILD_FIRST);
-		/** @var $file \SplFileInfo */
-		foreach ($it as $file) {
-			if (in_array($file->getBasename(), array('.', '..'))) {
-				continue;
-			} elseif ($file->isDir()) {
-				if (true !== @rmdir($file->getPathname())) {
-					throw new IOException("Failed to remove directory '$this->path'");
-				}
-			} elseif ($file->isFile() || $file->isLink()) {
-				if (true !== @unlink($file->getPathname())) {
-					throw new IOException("Failed to remove directory '$this->path'");
-				}
-			}
-		}
-		if (true === @rmdir($this->path)) {
-			$this->path = null;
-			return $this;
-		} else {
-			throw new IOException("Failed to remove directory '$this->path'");
-		}
-	}
-
-	/**
+{	/**
 	 * @return array
+	 * @throws IOException
 	 */
 	public function getContent()
 	{
-		$it = iterator_to_array(new \FilesystemIterator($this->path));
-		/** @var $file \SplFileInfo */
-		foreach($it as $path => $file) {
-			if($file->isFile()) {
-				$output[$path] = new File($file->getPathname());
+		if($this->isCreated()) {
+			$it = iterator_to_array(new \FilesystemIterator($this->path));
+			/** @var \SplFileInfo $file */
+			foreach($it as $path => $file) {
+				if($file->isFile()) {
+					$output[$path] = new File($file->getPathname());
+				}
+				if($file->isDir()) {
+					$output[$path] = new Directory($file->getPathname());
+				}
 			}
-			if($file->isDir()) {
-				$output[$path] = new Directory($file->getPathname());
-			}
+			return (isset($output)) ? $output : array();
+		} else {
+			throw new IOException("Directory {$this->path} must be firstly created");
 		}
-		return (isset($output)) ? $output : array();
 	}
 
 	/**
@@ -116,11 +43,11 @@ class Directory extends FileSystem
 	 */
 	public function getFiles()
 	{
-		$files = iterator_to_array(new \FilesystemIterator($this->path));
-		/** @var $file \SplFileInfo */
-		foreach ($files as $path => $file) {
-			if ($file->isFile()) {
-				$output[$path] = new File($path);
+		$content = $this->getContent();
+		/** @var File|Directory $file */
+		foreach ($content as $path => $file) {
+			if ($file instanceof File) {
+				$output[$path] = $file;
 			}
 		}
 		return (isset($output)) ? $output : array();
@@ -131,11 +58,11 @@ class Directory extends FileSystem
 	 */
 	public function getDirectories()
 	{
-		$files = iterator_to_array(new \FilesystemIterator($this->path));
-		/** @var $file \SplFileInfo */
-		foreach ($files as $path => $file) {
-			if ($file->isDir()) {
-				$output[$path] = new Directory($path);
+		$content = $this->getContent();
+		/** @var File|Directory $file */
+		foreach ($content as $path => $dir) {
+			if ($dir instanceof Directory) {
+				$output[$path] = $dir;
 			}
 		}
 		return (isset($output)) ? $output : array();
@@ -150,30 +77,25 @@ class Directory extends FileSystem
 	 * @throws InvalidArgumentException
 	 * @throws IOException
 	 */
-	public function copy($target, array $ignore = array(), $returnNew = true, $overwrite = false)
+	public function copy($target, $returnNew = true, $overwrite = false, array $ignore = array())
 	{
 		if (!is_string($target)) {
 			throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($target) . " given");
 		}
-		if (!is_bool($returnNew)) {
-			throw new InvalidArgumentException(__METHOD__ . " Second argument must to be bool, " . gettype($overwrite) . " given");
-		}
-		if (!is_bool($overwrite)) {
-			throw new InvalidArgumentException(__METHOD__ . " Third argument must to be bool, " . gettype($overwrite) . " given");
-		}
 		if (file_exists($target) && !$overwrite) {
 			throw new IOException("Failed to copy directory '$target'");
 		} else {
-			$dir = $this->create($target);
-			$this->_copy($this, $dir, $ignore);
-			return ($returnNew) ? new Directory($dir) : $this;
+			$dir = new Directory($target);
+			$dir->create();
+			$this->_copy($this, $dir->getInfo()->getPathname(), $ignore);
+			return ($returnNew) ? new Directory($dir->getInfo()->getPathname(), Directory::INTUITIVE) : true;
 		}
 	}
 
 	/**
 	 * @param string $target
 	 * @param bool $overwrite
-	 * @return Directory
+	 * @return bool
 	 * @throws InvalidArgumentException
 	 * @throws IOException
 	 */
@@ -188,41 +110,13 @@ class Directory extends FileSystem
 		if (file_exists($target) && !$overwrite) {
 			throw new IOException("Failed to copy directory '$target'");
 		} else {
-			$this->copy($target, array(), true, $overwrite);
-			$this->remove();
-			return new Directory($target);
-		}
-	}
-
-	/**
-	 * @param Directory|File $object
-	 * @param bool $move
-	 * @param bool $returnNew
-	 * @param bool $overwrite
-	 * @return Directory|File
-	 * @throws InvalidArgumentException
-	 */
-	public function append($object, $move = true, $returnNew = false, $overwrite = false)
-	{
-		if (!$object instanceof File && !$object instanceof Directory) {
-			throw new InvalidArgumentException(__METHOD__ . " First argument must to be object File or Directory, " . gettype($object) . " given");
-		}
-		if (!is_bool($move)) {
-			throw new InvalidArgumentException(__METHOD__ . " Second argument must to be bool, " . gettype($move) . " given");
-		}
-		if (!is_bool($returnNew)) {
-			throw new InvalidArgumentException(__METHOD__ . " Third argument must to be bool, " . gettype($move) . " given");
-		}
-		if (!is_bool($overwrite)) {
-			throw new InvalidArgumentException(__METHOD__ . " Fourth argument must to be bool, " . gettype($move) . " given");
-		}
-		$path = $this->path . DIRECTORY_SEPARATOR . $object->getInfo()->getBasename();
-		if ($move) {
-			$object->move($path, $overwrite);
-			return ($returnNew) ? $object : $this;
-		} else {
-			$object->copy($path, true, $overwrite);
-			return ($returnNew) ? $object : $this;
+			$directory = $this->copy($target, true, $overwrite, array());
+			if($this->remove() === true && $directory->isCreated()) {
+				$this->path = realpath($directory->getInfo()->getPathname());
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 
@@ -237,29 +131,45 @@ class Directory extends FileSystem
 		foreach($directory->getContent() as $path => $obj) {
 			if($obj instanceof File) {
 				if(!in_array($obj->getInfo()->getBasename(), $ignore)) {
-					copy($path, $copyDir . DIRECTORY_SEPARATOR . $obj->getInfo()->getBasename());
+					@copy($path, $copyDir . DIRECTORY_SEPARATOR . $obj->getInfo()->getBasename());
 				}
 			}
 			if($obj instanceof Directory) {
 				if(!in_array($obj->getInfo()->getBasename(), $ignore)) {
-					$newCopy = $this->create($copyDir . DIRECTORY_SEPARATOR . $obj->getInfo()->getBasename());
-					$this->_copy($obj, $newCopy);
+					$newCopy = new Directory($copyDir . DIRECTORY_SEPARATOR . $obj->getInfo()->getBasename());
+					$newCopy->create();
+					$this->_copy($obj, $newCopy->getInfo()->getPathname());
 				}
 			}
 		}
 	}
 
 	/**
-	 * @param string $path
-	 * @return string
+	 * @return bool
 	 * @throws IOException
 	 */
-	private function create($path)
+	public function remove()
 	{
-		if (true === @mkdir($path, 0777)) {
-			return realpath($path);
+		if($this->isCreated()) {
+			$it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->path), \RecursiveIteratorIterator::CHILD_FIRST);
+			/** @var \SplFileInfo $file */
+			foreach ($it as $file) {
+				if (in_array($file->getBasename(), array('.', '..'))) {
+					continue;
+				} elseif ($file->isDir()) {
+					if (true !== @rmdir($file->getPathname())) {
+						throw new IOException("Failed to remove directory '$this->path'");
+					}
+				} elseif ($file->isFile() || $file->isLink()) {
+					if (true !== @unlink($file->getPathname())) {
+						throw new IOException("Failed to remove directory '$this->path'");
+					}
+				}
+			}
+			@rmdir($this->path);
+			return !$this->isCreated();
 		} else {
-			throw new IOException("Failed to create directory '$path'");
+			throw new IOException("Directory {$this->path} must be firstly created");
 		}
 	}
 }

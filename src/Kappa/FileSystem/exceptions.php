@@ -1,11 +1,11 @@
 <?php
 /**
- * exceptions.php
+ * This file is part of the Kappa package.
  *
- * @author Ondřej Záruba <zarubaondra@gmail.com>
- * @date 1.5.13
+ * (c) Ondřej Záruba <zarubaondra@gmail.com>
  *
- * @package Kappa\FileSystem
+ * For the full copyright and license information, please view the license.md
+ * file that was distributed with this source code.
  */
 
 namespace Kappa\FileSystem;

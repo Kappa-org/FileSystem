@@ -5,191 +5,170 @@
  * @author Ondřej Záruba <zarubaondra@gmail.com>
  * @date 4.5.13
  *
- * @package Kappa
+ * @package Kappa\FileSystem
+ * @testCase Kappa\Tests\FileSystem\FileTest
  */
 
-namespace Kappa\Tests\FileSystem\File;
+namespace Kappa\Tests\FileSystem\FileTest;
 
+use Kappa\FileSystem\Directory;
 use Kappa\FileSystem\File;
 use Kappa\FileSystem\SplFileInfo;
-use Kappa\Tester\Helpers;
 use Kappa\Tester\TestCase;
 use Tester\Assert;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+/**
+ * Class FileTest
+ * @package Kappa\Tests\FileSystem\File
+ */
 class FileTest extends TestCase
 {
-	private $exceptions = array(
-		'inv' => '\Kappa\FileSystem\InvalidArgumentException',
-		'io' => '\Kappa\FileSystem\IOException',
-	);
-
 	/** @var string */
-	private $path;
-
-	/** @var \Kappa\FileSystem\File */
-	private $file;
+	private $dataPath;
 
 	protected function setUp()
 	{
-		$this->path = realpath(__DIR__ . '/../../data/file');
-		Assert::false(file_exists($this->path . '/testFile.txt'));
-		$this->restore();
-		Assert::true(file_exists($this->path . '/testFile.txt'));
+		$this->dataPath = __DIR__ . '/../../data/';
 	}
 
-	public function testGetInfo()
+	public function testCreate()
 	{
-		Assert::equal(new SplFileInfo($this->path), $this->file->getInfo());
+		$file = new File($this->generateFileName());
+		Assert::false($file->isCreated());
+		Assert::true($file->create());
+		Assert::true($file->isCreated());
+
+		$file = new File($this->generateFileName(), File::INTUITIVE);
+		Assert::true($file->isCreated());
+	}
+
+	public function testIsCreated()
+	{
+		$path = $this->generateFileName();
+		$file = new File($path);
+
+		Assert::same(file_exists($path), $file->isCreated());
+		Assert::true($file->create());
+		Assert::same(file_exists($path), $file->isCreated());
 	}
 
 	public function testOverwrite()
 	{
-		Assert::same("", file_get_contents($this->file->getInfo()->getPathname()));
-		Assert::type('\Kappa\FileSystem\File', $this->file->overwrite("Hello world!"));
-		Assert::same("Hello world!", file_get_contents($this->file->getInfo()->getPathname()));
-
-		Assert::throws(function () {
-			$this->file->overwrite(array("some"));
-		}, $this->exceptions['inv']);
-
-		$this->restore();
+		$file = new File($this->generateFileName());
+		Assert::true($file->create());
+		Assert::same("", $file->read());
+		Assert::true($file->overwrite("Hello world!"));
+		Assert::same("Hello world!", $file->read());
 	}
 
 	public function testClean()
 	{
-		file_put_contents($this->file->getInfo()->getPathname(), "Hello world!");
-		Assert::same("Hello world!", file_get_contents($this->file->getInfo()->getPathname()));
-		Assert::type('\Kappa\FileSystem\File', $this->file->clean());
-		Assert::same("", file_get_contents($this->file->getInfo()->getPathname()));
+		$file = new File($this->generateFileName());
+		Assert::true($file->create());
+		Assert::same("", $file->read());
+		Assert::true($file->overwrite("Hello world!"));
+		Assert::same("Hello world!", $file->read());
+		Assert::true($file->clean());
+		Assert::same("", $file->read());
 	}
 
 	public function testAppend()
 	{
-		Assert::same('', file_get_contents($this->file->getInfo()->getPathname()));
-		Assert::type('\Kappa\FileSystem\File', $this->file->append("Hello world!"));
-		Assert::same('Hello world!', file_get_contents($this->file->getInfo()->getPathname()));
-		Assert::type('\Kappa\FileSystem\File', $this->file->append("Test write by"));
-		Assert::same('Hello world!' . PHP_EOL . 'Test write by', file_get_contents($this->file->getInfo()->getPathname()));
-		Assert::type('\Kappa\FileSystem\File', $this->file->append('Kappa\Tester', false));
-		Assert::same('Hello world!' . PHP_EOL . 'Test write by Kappa\Tester', file_get_contents($this->file->getInfo()->getPathname()));
-
-		Assert::throws(function () {
-			$this->file->append(array('some'));
-		}, $this->exceptions['inv']);
-		Assert::throws(function () {
-			$this->file->append('some', array('some'));
-		}, $this->exceptions['inv']);
-
-		$this->restore();
+		$file = new File($this->generateFileName());
+		Assert::true($file->create());
+		Assert::same("", $file->read());
+		Assert::true($file->append("Hello"));
+		Assert::true($file->append("world!", false));
+		Assert::true($file->append("I'm test"));
+		Assert::same("Hello world!" . PHP_EOL . "I'm test", $file->read());
 	}
 
 	public function testRead()
 	{
-		file_put_contents($this->file->getInfo()->getPathname(), "Hello world!");
-		Assert::same("Hello world!", $this->file->read());
-
-		$this->restore();
+		$file = new File($this->generateFileName());
+		Assert::true($file->create());
+		Assert::same(file_get_contents($file->getInfo()->getPathname()), $file->read());
+		Assert::true($file->overwrite("Hello world! I'm test"));
+		Assert::same(file_get_contents($file->getInfo()->getPathname()), $file->read());
 	}
 
 	public function testGetHash()
 	{
-		file_put_contents($this->file->getInfo()->getPathname(), "Hello world!");
-		Assert::same(md5_file($this->path . '/testFile.txt'), $this->file->getHash());
-
-		$this->restore();
+		$file = new File($this->generateFileName());
+		Assert::true($file->create());
+		Assert::same(md5_file($file->getInfo()->getPathname()), $file->getHash());
+		Assert::true($file->overwrite("Hello world! I'm test"));
+		Assert::same(md5_file($file->getInfo()->getPathname()), $file->getHash());
 	}
 
-	public function testIsSame()
+	public function testGetInfo()
 	{
-		$_file = new File($this->path . '/newFile.txt');
-		file_put_contents($_file->getInfo()->getPathname(), "Hello world!");
-		Assert::false($this->file->isSame($_file));
-		file_put_contents($this->file->getInfo()->getPathname(), "Hello world!");
-		Assert::true($this->file->isSame($_file));
-
-		$this->restore();
-	}
-
-	public function testReplace()
-	{
-		file_put_contents($this->file->getInfo()->getPathname(), "Hello world");
-		Assert::type('\Kappa\FileSystem\File', $this->file->replace('#^Hello#', "My"));
-		Assert::same('My world', file_get_contents($this->file->getInfo()->getPathname()));
-
-		$this->restore();
+		$path = $this->generateFileName();
+		$file = new File($path);
+		Assert::true($file->create());
+		$spl = new SplFileInfo($path);
+		Assert::same($spl->getRealPath(), $file->getInfo()->getRealPath());
 	}
 
 	public function testRemove()
 	{
-		Assert::false(file_exists($this->path . '/newFile.txt'));
-		$file = new File($this->path . '/newFile.txt');
-		Assert::true(file_exists($this->path . '/newFile.txt'));
+		$file= new File($this->generateFileName());
+		Assert::true($file->create());
+		Assert::true($file->isCreated());
 		Assert::true($file->remove());
-		Assert::false(file_exists($this->path . '/newFile.txt'));
+		Assert::false($file->isCreated());
 	}
 
 	public function testRename()
 	{
-		Assert::true(file_exists($this->file->getInfo()->getPathname()));
-		Assert::false(file_exists($this->path . '/renamedFile.txt'));
-		/** @var \Kappa\FileSystem\File $file */
-		$file = $this->file->rename('renamedFile.txt');
-		Assert::type('\Kappa\FileSystem\File', $file);
-
-		new File($this->path . '/existFile.txt');
-		Assert::throws(function () use ($file) {
-			$file->rename('existFile.txt');
-		}, $this->exceptions['io']);
-		Assert::true(file_exists($this->path . '/renamedFile.txt'));
-		Assert::type('\Kappa\FileSystem\File', $file = $file->rename('existFile.txt', true));
-		Assert::false(file_exists($this->path . '/renamedFile.txt'));
-
-		$this->restore();
+		$path = $this->generateFileName();
+		$file = new File($path);
+		Assert::true($file->create());
+		Assert::same(realpath($path), $file->getInfo()->getPathname());
+		Assert::true($file->rename('renamed.txt'));
+		Assert::same(realpath($this->dataPath . '/renamed.txt'), $file->getInfo()->getPathname());
 	}
 
 	public function testCopy()
 	{
-		file_put_contents($this->file->getInfo()->getPathname(), "Hello world!");
-		Assert::false(file_exists($this->path . '/copyFile.txt'));
-		Assert::type('\Kappa\FileSystem\File', $file = $this->file->copy($this->path . '/copyFile.txt'));
-		Assert::true(file_exists($this->path . '/copyFile.txt'));
-		Assert::true($this->file->isSame($file));
-		Assert::notSame($this->file, $file);
-		unlink($file->getInfo()->getPathname());
-		Assert::type('\Kappa\FileSystem\File', $file = $this->file->copy($this->path . '/copyFile.txt', false));
-		Assert::same($this->file, $file);
-		Assert::type('\Kappa\FileSystem\File', $file = $this->file->copy($this->path . '/copyFile.txt', false, true));
-		Assert::throws(function () {
-			$this->file->copy($this->path . '/copyFile.txt');
-		}, $this->exceptions['io']);
-		unlink($this->path . '/copyFile.txt');
+		$file = new File($this->generateFileName());
+		$copyPath = $this->generateFileName();
+		Assert::true($file->create());
+		Assert::false(file_exists($copyPath));
+		Assert::true($file->copy($copyPath, false));
+		Assert::true(file_exists($copyPath));
+
+		$path = $this->generateFileName();
+		$file = new File($path);
+		$copyPath = $this->generateFileName();
+		Assert::true($file->create());
+		Assert::false(file_exists($copyPath));
+		$copyFile = $file->copy($copyPath);
+		Assert::same(realpath($copyPath), $copyFile->getInfo()->getPathname());
+		Assert::same(realpath($path), $file->getInfo()->getPathname());
+		Assert::same($copyFile->isCreated(), $file->isCreated());
 	}
 
 	public function testMove()
 	{
-		file_put_contents($this->file->getInfo()->getPathname(), "Hello world!");
-		Assert::true(file_exists($this->path . '/testFile.txt'));
-		Assert::false(file_exists($this->path . '/moveFile.txt'));
-		Assert::type('\Kappa\FileSystem\File', $file = $this->file->move($this->path . '/moveFile.txt'));
-		Assert::false(file_exists($this->path . '/testFile.txt'));
-		Assert::true(file_exists($this->path . '/moveFile.txt'));
+		$path = $this->generateFileName();
+		$movePath = $this->generateFileName();
+		$file = new File($path);
+		Assert::true($file->create());
+		Assert::true($file->move($movePath));
+		Assert::false(file_exists($path));
+		Assert::same(realpath($movePath), $file->getInfo()->getPathname());
 	}
 
-	private function restore()
+	/**
+	 * @return string
+	 */
+	private function generateFileName()
 	{
-		\Tester\Helpers::purge($this->path);
-		$this->file = new File($this->path . '/testFile.txt');
+		return $path = $this->dataPath . DIRECTORY_SEPARATOR . time() . rand(1000000,999999999) . '.txt';
 	}
-
-	protected function tearDown()
-	{
-		\Tester\Helpers::purge($this->path);
-	}
-
-	/** Providers */
-
 }
 
 \run(new FileTest());
