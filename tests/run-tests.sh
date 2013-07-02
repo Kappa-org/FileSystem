@@ -11,6 +11,8 @@ if [ ! -f "$runnerScript" ]; then
 	exit 2
 fi
 
+sudo mkdir "$dir/data" -p
+
 # Path to php.ini if passed as argument option
 phpIni=
 while getopts ":c:" opt; do
@@ -38,3 +40,5 @@ if [ "${VERBOSE-false}" != "false" -a $error -ne 0 ]; then
 	for i in $(find . -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
 	exit $error
 fi
+
+sudo rm -rf "$dir/data"
