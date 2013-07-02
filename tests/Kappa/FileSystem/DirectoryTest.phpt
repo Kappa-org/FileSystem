@@ -8,7 +8,7 @@
  * @package Kappa
  * @testCase Kappa\Tests\FileSystem\Directory
  */
- 
+
 namespace Kappa\Tests\FileSystem\Directory;
 
 use Kappa\FileSystem\Directory;
@@ -41,9 +41,11 @@ class DirectoryTest extends TestCase
 		Assert::false($directory->isCreated());
 		Assert::true($directory->create());
 		Assert::true($directory->isCreated());
+		Assert::true($directory->remove());
 
 		$directory = new Directory($this->generateDirName(), Directory::INTUITIVE);
 		Assert::true($directory->isCreated());
+		Assert::true($directory->remove());
 	}
 
 	public function testIsCreated()
@@ -52,6 +54,7 @@ class DirectoryTest extends TestCase
 		Assert::same(file_exists($directory->getInfo()->getPathname()), $directory->isCreated());
 		Assert::true($directory->create());
 		Assert::same(file_exists($directory->getInfo()->getPathname()), $directory->isCreated());
+		Assert::true($directory->remove());
 	}
 
 	public function testGetInfo()
@@ -61,6 +64,7 @@ class DirectoryTest extends TestCase
 		Assert::true($directory->create());
 		$spl = new SplFileInfo($path);
 		Assert::same(realpath($spl->getPathname()), $directory->getInfo()->getPathname());
+		Assert::true($directory->remove());
 	}
 
 	public function testRename()
@@ -73,6 +77,7 @@ class DirectoryTest extends TestCase
 		Assert::false(file_exists($path));
 		Assert::true(file_exists($this->dataPath . '/renamed'));
 		Assert::true($directory->isCreated());
+		Assert::true($directory->remove());
 	}
 
 	public function testGetContent()
@@ -83,6 +88,7 @@ class DirectoryTest extends TestCase
 		$_file = new File($path . DIRECTORY_SEPARATOR . time() . rand(1000000,999999999) . '.txt');
 		Assert::true($_file->create());
 		Assert::equal(array($_file->getInfo()->getPathname() => $_file), $directory->getContent());
+		Assert::true($directory->remove());
 	}
 
 	public function testGetFiles()
@@ -93,6 +99,7 @@ class DirectoryTest extends TestCase
 		$_file = new File($path . DIRECTORY_SEPARATOR . time() . rand(1000000,999999999) . '.txt');
 		Assert::true($_file->create());
 		Assert::equal(array($_file->getInfo()->getPathname() => $_file), $directory->getFiles());
+		Assert::true($directory->remove());
 	}
 
 	public function testGetDirectory()
@@ -103,6 +110,7 @@ class DirectoryTest extends TestCase
 		$_file = new Directory($path . DIRECTORY_SEPARATOR . time() . rand(1000000,999999999));
 		Assert::true($_file->create());
 		Assert::equal(array($_file->getInfo()->getPathname() => $_file), $directory->getDirectories());
+		Assert::true($directory->remove());
 	}
 
 	public function testRemove()
@@ -134,6 +142,8 @@ class DirectoryTest extends TestCase
 		Assert::same(realpath($copyPath), $_dir->getInfo()->getPathname());
 		Assert::true(file_exists($copyPath));
 		Assert::true(file_exists($copyPath . DIRECTORY_SEPARATOR . $_file->getInfo()->getBasename()));
+		Assert::true($directory->remove());
+		Assert::true($_dir->remove());
 	}
 
 	public function testMove()
@@ -142,7 +152,8 @@ class DirectoryTest extends TestCase
 		$directory = new Directory($path);
 		Assert::true($directory->create());
 		$filePath = $path . DIRECTORY_SEPARATOR . time() . rand(1000000,999999999) . '.txt';
-		$_file = new File($filePath, File::INTUITIVE);
+		$_file = new File($filePath);
+		Assert::true($_file->create());
 		Assert::true(file_exists($path));
 		Assert::true(file_exists($filePath));
 		$copyPath = $this->generateDirName();
@@ -152,6 +163,8 @@ class DirectoryTest extends TestCase
 		Assert::same(realpath($copyPath), $directory->getInfo()->getPathname());
 		Assert::true(file_exists($copyPath));
 		Assert::true(file_exists($copyPath . DIRECTORY_SEPARATOR . $_file->getInfo()->getBasename()));
+		@unlink($copyPath . DIRECTORY_SEPARATOR . $_file->getInfo()->getBasename());
+		Assert::true($directory->remove());
 	}
 
 	/**

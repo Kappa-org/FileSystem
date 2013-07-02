@@ -1,5 +1,6 @@
 #!/bin/sh
 
+
 # Path to this script's directory
 dir=$(cd `dirname $0` && pwd)
 
@@ -10,8 +11,6 @@ if [ ! -f "$runnerScript" ]; then
 	echo "php composer.phar update --dev." >&2
 	exit 2
 fi
-
-sudo mkdir "$dir/data" -p
 
 # Path to php.ini if passed as argument option
 phpIni=
@@ -40,5 +39,3 @@ if [ "${VERBOSE-false}" != "false" -a $error -ne 0 ]; then
 	for i in $(find . -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
 	exit $error
 fi
-
-sudo rm -rf "$dir/data"

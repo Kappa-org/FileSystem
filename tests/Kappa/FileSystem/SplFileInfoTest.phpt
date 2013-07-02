@@ -37,6 +37,7 @@ class SplFileInfoTest extends TestCase
 		$fileName = $this->generateFileName() ;
 		$file = new File($this->dataPath . DIRECTORY_SEPARATOR . $fileName, File::INTUITIVE);
 		Assert::same(DIRECTORY_SEPARATOR . $fileName, $file->getInfo()->getRelativePath($this->dataPath));
+		Assert::true($file->remove());
 	}
 
 	public function testFileExtension()
@@ -45,6 +46,7 @@ class SplFileInfoTest extends TestCase
 		$file = new File($this->dataPath . DIRECTORY_SEPARATOR . $fileName);
 		Assert::true($file->create());
 		Assert::same('.txt', $file->getInfo()->getFileExtension());
+		Assert::true($file->remove());
 	}
 
 	public function testIsImage()
@@ -53,6 +55,7 @@ class SplFileInfoTest extends TestCase
 		$file = new File($this->dataPath . DIRECTORY_SEPARATOR . $fileName);
 		Assert::true($file->create());
 		Assert::false($file->getInfo()->isImage());
+		Assert::true($file->remove());
 	}
 
 	/**

@@ -39,9 +39,11 @@ class FileTest extends TestCase
 		Assert::false($file->isCreated());
 		Assert::true($file->create());
 		Assert::true($file->isCreated());
+		Assert::true($file->remove());
 
 		$file = new File($this->generateFileName(), File::INTUITIVE);
 		Assert::true($file->isCreated());
+		Assert::true($file->remove());
 	}
 
 	public function testIsCreated()
@@ -52,6 +54,7 @@ class FileTest extends TestCase
 		Assert::same(file_exists($path), $file->isCreated());
 		Assert::true($file->create());
 		Assert::same(file_exists($path), $file->isCreated());
+		Assert::true($file->remove());
 	}
 
 	public function testOverwrite()
@@ -61,6 +64,7 @@ class FileTest extends TestCase
 		Assert::same("", $file->read());
 		Assert::true($file->overwrite("Hello world!"));
 		Assert::same("Hello world!", $file->read());
+		Assert::true($file->remove());
 	}
 
 	public function testClean()
@@ -72,6 +76,7 @@ class FileTest extends TestCase
 		Assert::same("Hello world!", $file->read());
 		Assert::true($file->clean());
 		Assert::same("", $file->read());
+		Assert::true($file->remove());
 	}
 
 	public function testAppend()
@@ -83,6 +88,7 @@ class FileTest extends TestCase
 		Assert::true($file->append("world!", false));
 		Assert::true($file->append("I'm test"));
 		Assert::same("Hello world!" . PHP_EOL . "I'm test", $file->read());
+		Assert::true($file->remove());
 	}
 
 	public function testRead()
@@ -92,6 +98,7 @@ class FileTest extends TestCase
 		Assert::same(file_get_contents($file->getInfo()->getPathname()), $file->read());
 		Assert::true($file->overwrite("Hello world! I'm test"));
 		Assert::same(file_get_contents($file->getInfo()->getPathname()), $file->read());
+		Assert::true($file->remove());
 	}
 
 	public function testGetHash()
@@ -101,6 +108,7 @@ class FileTest extends TestCase
 		Assert::same(md5_file($file->getInfo()->getPathname()), $file->getHash());
 		Assert::true($file->overwrite("Hello world! I'm test"));
 		Assert::same(md5_file($file->getInfo()->getPathname()), $file->getHash());
+		Assert::true($file->remove());
 	}
 
 	public function testGetInfo()
@@ -110,6 +118,7 @@ class FileTest extends TestCase
 		Assert::true($file->create());
 		$spl = new SplFileInfo($path);
 		Assert::same($spl->getRealPath(), $file->getInfo()->getRealPath());
+		Assert::true($file->remove());
 	}
 
 	public function testRemove()
@@ -129,6 +138,7 @@ class FileTest extends TestCase
 		Assert::same(realpath($path), $file->getInfo()->getPathname());
 		Assert::true($file->rename('renamed.txt'));
 		Assert::same(realpath($this->dataPath . '/renamed.txt'), $file->getInfo()->getPathname());
+		Assert::true($file->remove());
 	}
 
 	public function testCopy()
@@ -139,6 +149,8 @@ class FileTest extends TestCase
 		Assert::false(file_exists($copyPath));
 		Assert::true($file->copy($copyPath, false));
 		Assert::true(file_exists($copyPath));
+		Assert::true($file->remove());
+		@unlink($copyPath);
 
 		$path = $this->generateFileName();
 		$file = new File($path);
@@ -149,6 +161,8 @@ class FileTest extends TestCase
 		Assert::same(realpath($copyPath), $copyFile->getInfo()->getPathname());
 		Assert::same(realpath($path), $file->getInfo()->getPathname());
 		Assert::same($copyFile->isCreated(), $file->isCreated());
+		Assert::true($file->remove());
+		Assert::true($copyFile->remove());
 	}
 
 	public function testMove()
@@ -160,6 +174,7 @@ class FileTest extends TestCase
 		Assert::true($file->move($movePath));
 		Assert::false(file_exists($path));
 		Assert::same(realpath($movePath), $file->getInfo()->getPathname());
+		Assert::true($file->remove());
 	}
 
 	/**
