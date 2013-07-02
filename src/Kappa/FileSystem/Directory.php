@@ -104,9 +104,6 @@ class Directory extends FileSystem
 		if (!is_string($target)) {
 			throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($target) . " given");
 		}
-		if (!is_bool($overwrite)) {
-			throw new InvalidArgumentException(__METHOD__ . " Second argument must to be bool, " . gettype($overwrite) . " given");
-		}
 		if (file_exists($target) && !$overwrite) {
 			throw new IOException("Failed to copy directory '$target'");
 		} else {
