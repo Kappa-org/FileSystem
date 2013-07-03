@@ -86,7 +86,6 @@ class FileSystem
 	public function getInfo()
 	{
 		return new SplFileInfo($this->path);
-
 	}
 
 	/**
