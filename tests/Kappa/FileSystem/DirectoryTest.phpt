@@ -151,8 +151,9 @@ class DirectoryTest extends TestCase
 		$path = $this->generateDirName();
 		$directory = new Directory($path);
 		Assert::true($directory->create());
-		$filePath = $path . DIRECTORY_SEPARATOR . time() . rand(1000000,999999999) . '.txt';
-		$_file = new File($filePath);
+		$filePath = $path . DIRECTORY_SEPARATOR;
+		$fileName = time() . rand(1000000,999999999) . '.txt';
+		$_file = new File($filePath . $fileName);
 		Assert::true($_file->create());
 		Assert::true(file_exists($path));
 		Assert::true(file_exists($filePath));
@@ -162,8 +163,8 @@ class DirectoryTest extends TestCase
 		Assert::false(file_exists($filePath));
 		Assert::same(realpath($copyPath), $directory->getInfo()->getPathname());
 		Assert::true(file_exists($copyPath));
-		Assert::true(file_exists($copyPath . DIRECTORY_SEPARATOR . $_file->getInfo()->getBasename()));
-		@unlink($copyPath . DIRECTORY_SEPARATOR . $_file->getInfo()->getBasename());
+		Assert::true(file_exists($copyPath . DIRECTORY_SEPARATOR . $fileName));
+		@unlink($copyPath . DIRECTORY_SEPARATOR . $fileName);
 		Assert::true($directory->remove());
 	}
 
