@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the ${PACKAGE} package.
+ * This file is part of the Kappa package.
  *
  * (c) Ondřej Záruba <zarubaondra@gmail.com>
  *
