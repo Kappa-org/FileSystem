@@ -80,16 +80,20 @@ class Directory extends FileSystem
 	 */
 	public function copy($target, $returnNew = true, $overwrite = false, array $ignore = array())
 	{
-		if (!is_string($target)) {
-			throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($target) . " given");
-		}
-		if (file_exists($target) && !$overwrite) {
-			throw new IOException("Failed to copy directory '$target'");
+		if($this->isUsable()) {
+			if (!is_string($target)) {
+				throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($target) . " given");
+			}
+			if (file_exists($target) && !$overwrite) {
+				throw new IOException("Failed to copy directory '$target'");
+			} else {
+				$dir = new Directory($target);
+				$dir->create();
+				$this->_copy($this, $dir->getInfo()->getPathname(), $ignore);
+				return ($returnNew) ? new Directory($dir->getInfo()->getPathname(), Directory::INTUITIVE) : true;
+			}
 		} else {
-			$dir = new Directory($target);
-			$dir->create();
-			$this->_copy($this, $dir->getInfo()->getPathname(), $ignore);
-			return ($returnNew) ? new Directory($dir->getInfo()->getPathname(), Directory::INTUITIVE) : true;
+			throw new IOException("Directory {$this->path} must be firstly created");
 		}
 	}
 
