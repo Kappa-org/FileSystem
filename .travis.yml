@@ -3,7 +3,7 @@ language: php
 php:
         - "5.4"
 
-script: "VERBOSE=true ./vendor/bin/tester -s tests/"
+script: "VERBOSE=true ./vendor/bin/tester -s -j 20 tests/"
 
 before_script:
         - composer self-update
