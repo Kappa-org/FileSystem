@@ -15,7 +15,8 @@ namespace Kappa\FileSystem;
  * @package Kappa\FileSystem
  */
 class Directory extends FileSystem
-{	/**
+{
+	/**
 	 * @return array
 	 * @throws IOException
 	 */
