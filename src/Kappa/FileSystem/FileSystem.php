@@ -34,7 +34,7 @@ class FileSystem
 			throw new InvalidArgumentException(__METHOD__ . " Argument must to be string, " . gettype($path) . " given");
 		}
 		$this->path = $path;
-		if($this->isCreated()) {
+		if($this->isUsable()) {
 			$this->path = realpath($path);
 		} else {
 			if($sensitivity === self::INTUITIVE) {
@@ -50,7 +50,7 @@ class FileSystem
 	 */
 	public function create()
 	{
-		if(!$this->isCreated()) {
+		if(!$this->isUsable()) {
 			if($this instanceof File) {
 				$file = @fopen($this->path, 'w+');
 				@fclose($file);
@@ -58,7 +58,7 @@ class FileSystem
 				@mkdir($this->path, 0777);
 			}
 			$this->path = realpath($this->path);
-			return $this->isCreated();
+			return $this->isUsable();
 		} else {
 			return true;
 		}
@@ -67,7 +67,7 @@ class FileSystem
 	/**
 	 * @return bool
 	 */
-	public function isCreated()
+	public function isUsable()
 	{
 		if (is_writable($this->path) && is_readable($this->path)) {
 			if($this instanceof File) {

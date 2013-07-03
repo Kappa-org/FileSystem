@@ -22,7 +22,7 @@ class Directory extends FileSystem
 	 */
 	public function getContent()
 	{
-		if($this->isCreated()) {
+		if($this->isUsable()) {
 			$it = iterator_to_array(new \FilesystemIterator($this->path));
 			/** @var \SplFileInfo $file */
 			foreach($it as $path => $file) {
@@ -109,7 +109,7 @@ class Directory extends FileSystem
 			throw new IOException("Failed to copy directory '$target'");
 		} else {
 			$directory = $this->copy($target, true, $overwrite, array());
-			if($this->remove() === true && $directory->isCreated()) {
+			if($this->remove() === true && $directory->isUsable()) {
 				$this->path = realpath($directory->getInfo()->getPathname());
 				return true;
 			} else {
@@ -148,7 +148,7 @@ class Directory extends FileSystem
 	 */
 	public function remove()
 	{
-		if($this->isCreated()) {
+		if($this->isUsable()) {
 			$it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->path), \RecursiveIteratorIterator::CHILD_FIRST);
 			/** @var \SplFileInfo $file */
 			foreach ($it as $file) {
@@ -165,7 +165,7 @@ class Directory extends FileSystem
 				}
 			}
 			@rmdir($this->path);
-			return !$this->isCreated();
+			return !$this->isUsable();
 		} else {
 			throw new IOException("Directory {$this->path} must be firstly created");
 		}

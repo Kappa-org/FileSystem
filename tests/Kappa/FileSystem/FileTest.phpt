@@ -36,24 +36,24 @@ class FileTest extends TestCase
 	public function testCreate()
 	{
 		$file = new File($this->generateFileName());
-		Assert::false($file->isCreated());
+		Assert::false($file->isUsable());
 		Assert::true($file->create());
-		Assert::true($file->isCreated());
+		Assert::true($file->isUsable());
 		Assert::true($file->remove());
 
 		$file = new File($this->generateFileName(), File::INTUITIVE);
-		Assert::true($file->isCreated());
+		Assert::true($file->isUsable());
 		Assert::true($file->remove());
 	}
 
-	public function testIsCreated()
+	public function testisUsable()
 	{
 		$path = $this->generateFileName();
 		$file = new File($path);
 
-		Assert::same(file_exists($path), $file->isCreated());
+		Assert::same(file_exists($path), $file->isUsable());
 		Assert::true($file->create());
-		Assert::same(file_exists($path), $file->isCreated());
+		Assert::same(file_exists($path), $file->isUsable());
 		Assert::true($file->remove());
 	}
 
@@ -125,9 +125,9 @@ class FileTest extends TestCase
 	{
 		$file= new File($this->generateFileName());
 		Assert::true($file->create());
-		Assert::true($file->isCreated());
+		Assert::true($file->isUsable());
 		Assert::true($file->remove());
-		Assert::false($file->isCreated());
+		Assert::false($file->isUsable());
 	}
 
 	public function testRename()
@@ -160,7 +160,7 @@ class FileTest extends TestCase
 		$copyFile = $file->copy($copyPath);
 		Assert::same(realpath($copyPath), $copyFile->getInfo()->getPathname());
 		Assert::same(realpath($path), $file->getInfo()->getPathname());
-		Assert::same($copyFile->isCreated(), $file->isCreated());
+		Assert::same($copyFile->isUsable(), $file->isUsable());
 		Assert::true($file->remove());
 		Assert::true($copyFile->remove());
 	}

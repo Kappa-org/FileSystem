@@ -24,7 +24,7 @@ class File extends FileSystem
 	 */
 	public function overwrite($content = null)
 	{
-		if($this->isCreated()) {
+		if($this->isUsable()) {
 			if($content && !is_string($content) && !is_numeric($content)) {
 				throw new InvalidArgumentException(__METHOD__ . " First argument expect to be string, null or number, " . gettype($content) . " given");
 			}
@@ -75,7 +75,7 @@ class File extends FileSystem
 	 */
 	public function read()
 	{
-		if($this->isCreated()) {
+		if($this->isUsable()) {
 			return file_get_contents($this->path);
 		} else {
 			throw new IOException("File {$this->path} must be firstly created");
@@ -88,7 +88,7 @@ class File extends FileSystem
 	 */
 	public function getHash()
 	{
-		if($this->isCreated()) {
+		if($this->isUsable()) {
 			return md5_file($this->path);
 		} else {
 			throw new IOException("File {$this->path} must be firstly created");
@@ -101,9 +101,9 @@ class File extends FileSystem
 	 */
 	public function remove()
 	{
-		if($this->isCreated()) {
+		if($this->isUsable()) {
 			@unlink($this->path);
-			return !$this->isCreated();
+			return !$this->isUsable();
 	 	} else {
 			throw new IOException("File {$this->path} must be firstly created");
 		}
@@ -119,7 +119,7 @@ class File extends FileSystem
 	 */
 	public function copy($target, $returnNew = true, $overwrite = false)
 	{
-		if($this->isCreated()) {
+		if($this->isUsable()) {
 			if (!is_string($target)) {
 				throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($target) . " given");
 			}
@@ -153,7 +153,7 @@ class File extends FileSystem
 			throw new IOException("Failed to move file to {$target}");
 		} else {
 			$file = $this->copy($target, true, $overwrite);
-			if (true === $this->remove() && $file->isCreated()) {
+			if (true === $this->remove() && $file->isUsable()) {
 				$this->path = realpath($file->getInfo()->getPathname());
 				return true;
 			} else {
