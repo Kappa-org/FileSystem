@@ -101,9 +101,6 @@ class FileSystem
 		if (!is_string($newName)) {
 			throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($newName) . " given");
 		}
-		if (!is_bool($overwrite)) {
-			throw new InvalidArgumentException(__METHOD__ . " Second argument must to be bool, " . gettype($overwrite) . " given");
-		}
 		$newPath = $this->getInfo()->getPath() . DIRECTORY_SEPARATOR . $newName;
 		if($this instanceof File) {
 			if(is_file($newPath) && !$overwrite) {
