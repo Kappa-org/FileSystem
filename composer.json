@@ -3,7 +3,7 @@
 	"type": "library",
 	"description": "Easy system for work with files and directories",
 	"keywords": ["Nette", "Kappa", "file system", "files", "directories"],
-	"homepage": "https://github.com/Kappa-org/FileSystem",
+	"homepage": "https://github.com/Kappa-app/FileSystem",
 	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
 	"authors": [
 		{
@@ -13,7 +13,7 @@
 	],
 	"support": {
 		"email": "zarubaondra@gmail.com",
-		"issues": "https://github.com/Kappa-org/FileSystem/issues"
+		"issues": "https://github.com/Kappa-app/FileSystem/issues"
 	},
 	"require": {
 		"php": ">= 5.3.0"
