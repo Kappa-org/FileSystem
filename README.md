@@ -1,6 +1,6 @@
 # Kappa\FileSystem [![Build Status](https://travis-ci.org/Kappa-org/FileSystem.png?branch=master)](https://travis-ci.org/Kappa-org/FileSystem)
 
-Easy system for work with files and directories(FileUpload, Image, File, Directory)
+Easy system for work with files and directories
 
 ## Requirements:
 
