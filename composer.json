@@ -1,8 +1,8 @@
 {
 	"name": "kappa/filesystem",
 	"type": "library",
-	"description": "Easy system for work with files and directories(FileUpload, Image, File, Directory)",
-	"keywords": ["Nette", "Kappa", "file system", "files", "image", "file upload", "directories"],
+	"description": "Easy system for work with files and directories",
+	"keywords": ["Nette", "Kappa", "file system", "files", "directories"],
 	"homepage": "https://github.com/Kappa-org/FileSystem",
 	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
 	"authors": [
