@@ -4,9 +4,8 @@ Easy system for work with files and directories(FileUpload, Image, File, Directo
 
 ## Requirements:
 
-* PHP 5.4 or higher
+* PHP 5.3 or higher
 * [Composer](http://getcomposer.org/)
-* [Nette Framework](http://nette.org)
 
 ## Installation
 
