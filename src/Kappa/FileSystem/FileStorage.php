@@ -42,7 +42,7 @@ class FileStorage
 	/**
 	 * @return string
 	 */
-	public function getFileName()
+	public function getBaseName()
 	{
 		return $this->getInfo()->getBasename();
 	}

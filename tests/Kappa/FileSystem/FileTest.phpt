@@ -62,12 +62,12 @@ class FileTest extends TestCase
 		}, 'Kappa\FileSystem\FileNotFoundException');
 	}
 
-	public function testGetFileName()
+	public function testGetBaseName()
 	{
 		$path = $this->randomFile();
 		$file = new File($path, File::CREATE);
 		$name = explode(DIRECTORY_SEPARATOR, $path);
-		Assert::same($name[count($name) - 1], $file->getFileName());
+		Assert::same($name[count($name) - 1], $file->getBaseName());
 		Assert::true(unlink($path));
 	}
 
