@@ -88,6 +88,7 @@ class FileTest extends TestCase
 		Assert::same("", $file->read());
 		Assert::true($file->overwrite("Hello"));
 		Assert::same("Hello", $file->read());
+		Assert::true(unlink($path));
 	}
 
 	/**
