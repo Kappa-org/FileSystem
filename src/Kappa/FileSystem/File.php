@@ -24,12 +24,12 @@ class File extends FileStorage
 	 */
 	public function overwrite($content = null)
 	{
-		if($this->isCreated()) {
-			if($content && !is_string($content) && !is_numeric($content)) {
+		if ($this->isCreated()) {
+			if ($content && !is_string($content) && !is_numeric($content)) {
 				throw new InvalidArgumentException(__METHOD__ . " First argument expect to be string, null or number, " . gettype($content) . " given");
 			}
 			@file_put_contents($this->path, $content);
-			if((string)$content === $this->read()) {
+			if ((string)$content === $this->read()) {
 				return true;
 			} else {
 				return false;
@@ -66,6 +66,7 @@ class File extends FileStorage
 		} else {
 			$_content = $content;
 		}
+
 		return $this->overwrite($_content);
 	}
 
@@ -75,7 +76,7 @@ class File extends FileStorage
 	 */
 	public function read()
 	{
-		if($this->isCreated()) {
+		if ($this->isCreated()) {
 			return file_get_contents($this->path);
 		} else {
 			throw new IOException("File {$this->path} must be firstly created");
@@ -88,7 +89,7 @@ class File extends FileStorage
 	 */
 	public function getHash()
 	{
-		if($this->isCreated()) {
+		if ($this->isCreated()) {
 			return md5_file($this->path);
 		} else {
 			throw new IOException("File {$this->path} must be firstly created");
@@ -101,10 +102,11 @@ class File extends FileStorage
 	 */
 	public function remove()
 	{
-		if($this->isCreated()) {
+		if ($this->isCreated()) {
 			@unlink($this->path);
+
 			return !$this->isCreated();
-	 	} else {
+		} else {
 			throw new IOException("File {$this->path} must be firstly created");
 		}
 	}
@@ -119,7 +121,7 @@ class File extends FileStorage
 	 */
 	public function copy($target, $returnNew = true, $overwrite = false)
 	{
-		if($this->isCreated()) {
+		if ($this->isCreated()) {
 			if (!is_string($target)) {
 				throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($target) . " given");
 			}
@@ -155,6 +157,7 @@ class File extends FileStorage
 			$file = $this->copy($target, true, $overwrite);
 			if (true === $this->remove() && $file->isCreated()) {
 				$this->path = realpath($file->getInfo()->getPathname());
+
 				return true;
 			} else {
 				return false;

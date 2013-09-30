@@ -123,7 +123,7 @@ class FileTest extends TestCase
 
 	public function testRemove()
 	{
-		$file= new File($this->generateFileName());
+		$file = new File($this->generateFileName());
 		Assert::true($file->create());
 		Assert::true($file->isCreated());
 		Assert::true($file->remove());
@@ -182,7 +182,7 @@ class FileTest extends TestCase
 	 */
 	private function generateFileName()
 	{
-		return $path = $this->dataPath . DIRECTORY_SEPARATOR . time() . rand(1000000,999999999) . '.txt';
+		return $path = $this->dataPath . DIRECTORY_SEPARATOR . time() . rand(1000000, 999999999) . '.txt';
 	}
 }
 

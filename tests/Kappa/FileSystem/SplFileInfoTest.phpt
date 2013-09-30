@@ -8,7 +8,7 @@
  * @package Kappa
  * @testCase Kappa\Tests\FileSystem\SplFileInfo
  */
- 
+
 namespace Kappa\Tests\FileSystem\SplFileInfo;
 
 use Kappa\FileSystem\File;
@@ -34,7 +34,7 @@ class SplFileInfoTest extends TestCase
 
 	public function testGetRelativePath()
 	{
-		$fileName = $this->generateFileName() ;
+		$fileName = $this->generateFileName();
 		$file = new File($this->dataPath . DIRECTORY_SEPARATOR . $fileName, File::INTUITIVE);
 		Assert::same(DIRECTORY_SEPARATOR . $fileName, $file->getInfo()->getRelativePath($this->dataPath));
 		Assert::true($file->remove());
@@ -63,7 +63,7 @@ class SplFileInfoTest extends TestCase
 	 */
 	private function generateFileName()
 	{
-		return time() . rand(1000000,999999999) . '.txt';
+		return time() . rand(1000000, 999999999) . '.txt';
 	}
 }
 

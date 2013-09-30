@@ -85,7 +85,7 @@ class DirectoryTest extends TestCase
 		$path = $this->generateDirName();
 		$directory = new Directory($path);
 		Assert::true($directory->create());
-		$_file = new File($path . DIRECTORY_SEPARATOR . time() . rand(1000000,999999999) . '.txt');
+		$_file = new File($path . DIRECTORY_SEPARATOR . time() . rand(1000000, 999999999) . '.txt');
 		Assert::true($_file->create());
 		Assert::equal(array($_file->getInfo()->getPathname() => $_file), $directory->getContent());
 		Assert::true($directory->remove());
@@ -96,7 +96,7 @@ class DirectoryTest extends TestCase
 		$path = $this->generateDirName();
 		$directory = new Directory($path);
 		Assert::true($directory->create());
-		$_file = new File($path . DIRECTORY_SEPARATOR . time() . rand(1000000,999999999) . '.txt');
+		$_file = new File($path . DIRECTORY_SEPARATOR . time() . rand(1000000, 999999999) . '.txt');
 		Assert::true($_file->create());
 		Assert::equal(array($_file->getInfo()->getPathname() => $_file), $directory->getFiles());
 		Assert::true($directory->remove());
@@ -107,7 +107,7 @@ class DirectoryTest extends TestCase
 		$path = $this->generateDirName();
 		$directory = new Directory($path);
 		Assert::true($directory->create());
-		$_file = new Directory($path . DIRECTORY_SEPARATOR . time() . rand(1000000,999999999));
+		$_file = new Directory($path . DIRECTORY_SEPARATOR . time() . rand(1000000, 999999999));
 		Assert::true($_file->create());
 		Assert::equal(array($_file->getInfo()->getPathname() => $_file), $directory->getDirectories());
 		Assert::true($directory->remove());
@@ -118,7 +118,7 @@ class DirectoryTest extends TestCase
 		$path = $this->generateDirName();
 		$directory = new Directory($path);
 		Assert::true($directory->create());
-		$_file = new File($path . DIRECTORY_SEPARATOR . time() . rand(1000000,999999999) . '.txt');
+		$_file = new File($path . DIRECTORY_SEPARATOR . time() . rand(1000000, 999999999) . '.txt');
 		Assert::true($_file->create());
 		Assert::true($directory->isCreated());
 		Assert::true($_file->isCreated());
@@ -132,7 +132,7 @@ class DirectoryTest extends TestCase
 		$path = $this->generateDirName();
 		$directory = new Directory($path);
 		Assert::true($directory->create());
-		$filePath = $path . DIRECTORY_SEPARATOR . time() . rand(1000000,999999999) . '.txt';
+		$filePath = $path . DIRECTORY_SEPARATOR . time() . rand(1000000, 999999999) . '.txt';
 		$_file = new File($filePath, File::INTUITIVE);
 		Assert::true(file_exists($path));
 		Assert::true(file_exists($filePath));
@@ -152,7 +152,7 @@ class DirectoryTest extends TestCase
 		$directory = new Directory($path);
 		Assert::true($directory->create());
 		$filePath = $path . DIRECTORY_SEPARATOR;
-		$fileName = time() . rand(1000000,999999999) . '.txt';
+		$fileName = time() . rand(1000000, 999999999) . '.txt';
 		$_file = new File($filePath . $fileName);
 		Assert::true($_file->create());
 		Assert::true(file_exists($path));
@@ -173,7 +173,7 @@ class DirectoryTest extends TestCase
 	 */
 	private function generateDirName()
 	{
-		return $this->dataPath . DIRECTORY_SEPARATOR . time() . rand(1000000,999999999);
+		return $this->dataPath . DIRECTORY_SEPARATOR . time() . rand(1000000, 999999999);
 	}
 }
 

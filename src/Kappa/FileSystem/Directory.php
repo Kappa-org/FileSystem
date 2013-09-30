@@ -22,17 +22,18 @@ class Directory extends FileStorage
 	 */
 	public function getContent()
 	{
-		if($this->isCreated()) {
+		if ($this->isCreated()) {
 			$it = iterator_to_array(new \FilesystemIterator($this->path));
 			/** @var \SplFileInfo $file */
-			foreach($it as $path => $file) {
-				if($file->isFile()) {
+			foreach ($it as $path => $file) {
+				if ($file->isFile()) {
 					$output[$path] = new File($file->getPathname());
 				}
-				if($file->isDir()) {
+				if ($file->isDir()) {
 					$output[$path] = new Directory($file->getPathname());
 				}
 			}
+
 			return (isset($output)) ? $output : array();
 		} else {
 			throw new IOException("Directory {$this->path} must be firstly created");
@@ -51,6 +52,7 @@ class Directory extends FileStorage
 				$output[$path] = $file;
 			}
 		}
+
 		return (isset($output)) ? $output : array();
 	}
 
@@ -66,6 +68,7 @@ class Directory extends FileStorage
 				$output[$path] = $dir;
 			}
 		}
+
 		return (isset($output)) ? $output : array();
 	}
 
@@ -80,7 +83,7 @@ class Directory extends FileStorage
 	 */
 	public function copy($target, $returnNew = true, $overwrite = false, array $ignore = array())
 	{
-		if($this->isCreated()) {
+		if ($this->isCreated()) {
 			if (!is_string($target)) {
 				throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($target) . " given");
 			}
@@ -90,6 +93,7 @@ class Directory extends FileStorage
 				$dir = new Directory($target);
 				$dir->create();
 				$this->_copy($this, $dir->getInfo()->getPathname(), $ignore);
+
 				return ($returnNew) ? new Directory($dir->getInfo()->getPathname(), Directory::INTUITIVE) : true;
 			}
 		} else {
@@ -113,8 +117,9 @@ class Directory extends FileStorage
 			throw new IOException("Failed to copy directory '$target'");
 		} else {
 			$directory = $this->copy($target, true, $overwrite, array());
-			if($this->remove() === true && $directory->isCreated()) {
+			if ($this->remove() === true && $directory->isCreated()) {
 				$this->path = realpath($directory->getInfo()->getPathname());
+
 				return true;
 			} else {
 				return false;
@@ -130,14 +135,14 @@ class Directory extends FileStorage
 	private function _copy(Directory $directory, $copyDir, array $ignore = array())
 	{
 		/** @var $obj \Kappa\FileSystem\File|\Kappa\FileSystem\Directory */
-		foreach($directory->getContent() as $path => $obj) {
-			if($obj instanceof File) {
-				if(!in_array($obj->getInfo()->getBasename(), $ignore)) {
+		foreach ($directory->getContent() as $path => $obj) {
+			if ($obj instanceof File) {
+				if (!in_array($obj->getInfo()->getBasename(), $ignore)) {
 					@copy($path, $copyDir . DIRECTORY_SEPARATOR . $obj->getInfo()->getBasename());
 				}
 			}
-			if($obj instanceof Directory) {
-				if(!in_array($obj->getInfo()->getBasename(), $ignore)) {
+			if ($obj instanceof Directory) {
+				if (!in_array($obj->getInfo()->getBasename(), $ignore)) {
 					$newCopy = new Directory($copyDir . DIRECTORY_SEPARATOR . $obj->getInfo()->getBasename());
 					$newCopy->create();
 					$this->_copy($obj, $newCopy->getInfo()->getPathname());
@@ -152,7 +157,7 @@ class Directory extends FileStorage
 	 */
 	public function remove()
 	{
-		if($this->isCreated()) {
+		if ($this->isCreated()) {
 			$it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->path), \RecursiveIteratorIterator::CHILD_FIRST);
 			/** @var \SplFileInfo $file */
 			foreach ($it as $file) {
@@ -169,6 +174,7 @@ class Directory extends FileStorage
 				}
 			}
 			@rmdir($this->path);
+
 			return !$this->isCreated();
 		} else {
 			throw new IOException("Directory {$this->path} must be firstly created");

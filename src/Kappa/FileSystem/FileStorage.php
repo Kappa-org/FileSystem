@@ -34,14 +34,13 @@ class FileStorage
 			throw new InvalidArgumentException(__METHOD__ . " Argument must to be string, " . gettype($path) . " given");
 		}
 		$this->path = $path;
-		if($this->isCreated()) {
+		if ($this->isCreated()) {
 			$this->path = realpath($path);
 		} else {
-			if($sensitivity === self::INTUITIVE) {
+			if ($sensitivity === self::INTUITIVE) {
 				$this->create();
 			}
 		}
-
 	}
 
 	/**
@@ -50,14 +49,15 @@ class FileStorage
 	 */
 	public function create()
 	{
-		if(!$this->isCreated()) {
-			if($this instanceof File) {
+		if (!$this->isCreated()) {
+			if ($this instanceof File) {
 				$file = @fopen($this->path, 'w+');
 				@fclose($file);
 			} elseif ($this instanceof Directory) {
 				@mkdir($this->path, 0777);
 			}
 			$this->path = realpath($this->path);
+
 			return $this->isCreated();
 		} else {
 			return true;
@@ -70,7 +70,7 @@ class FileStorage
 	public function isCreated()
 	{
 		if (is_writable($this->path) && is_readable($this->path)) {
-			if($this instanceof File) {
+			if ($this instanceof File) {
 				return is_file($this->path);
 			} elseif ($this instanceof Directory) {
 				return is_dir($this->path);
@@ -86,7 +86,7 @@ class FileStorage
 	 */
 	public function getInfo()
 	{
-		if($this->isCreated()) {
+		if ($this->isCreated()) {
 			return new SplFileInfo($this->path);
 		} else {
 			throw new IOException("Directory {$this->path} must be firstly created");
@@ -102,28 +102,29 @@ class FileStorage
 	 */
 	public function rename($newName, $overwrite = false)
 	{
-		if($this->isCreated()) {
+		if ($this->isCreated()) {
 			if (!is_string($newName)) {
 				throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($newName) . " given");
 			}
 			$newPath = $this->getInfo()->getPath() . DIRECTORY_SEPARATOR . $newName;
-			if($this instanceof File) {
-				if(is_file($newPath) && !$overwrite) {
+			if ($this instanceof File) {
+				if (is_file($newPath) && !$overwrite) {
 					throw new IOException("Failed to rename to '$newPath', because file $newPath already exist");
 				}
 			}
-			if($this instanceof Directory) {
+			if ($this instanceof Directory) {
 				if (is_dir($newPath) && !$overwrite) {
 					throw new IOException("Failed to rename to '$newPath', because file $newPath already exist");
 				} else {
-					if(is_dir($newPath)) {
+					if (is_dir($newPath)) {
 						$directory = new Directory($newPath);
 						$directory->remove();
 					}
 				}
 			}
-			if(@rename($this->path, $newPath) === true) {
+			if (@rename($this->path, $newPath) === true) {
 				$this->path = $newPath;
+
 				return true;
 			} else {
 				return false;

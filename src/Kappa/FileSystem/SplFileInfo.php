@@ -32,6 +32,7 @@ class SplFileInfo extends \SplFileInfo
 	public function getRelativePath($root)
 	{
 		$root = realpath($root);
+
 		return trim(str_replace($root, "", $this->getPathname()));
 	}
 
@@ -55,7 +56,7 @@ class SplFileInfo extends \SplFileInfo
 			'image/png',
 		);
 		$imageInfo = @getimagesize($this->getPathname());
-		if(in_array($imageInfo['mime'], $types)) {
+		if (in_array($imageInfo['mime'], $types)) {
 			return true;
 		} else {
 			return false;
