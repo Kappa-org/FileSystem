@@ -178,7 +178,7 @@ class FileTest extends TestCase
 			$file->copy(array());
 		}, 'Kappa\FileSystem\InvalidArgumentException');
 		Assert::throws(function () use ($file, $copyPath) {
-			$newFile = new File($copyPath);
+			new File($copyPath);
 			$file->copy($copyPath);
 		}, 'Kappa\FileSystem\FileAlreadyExistException');
 
