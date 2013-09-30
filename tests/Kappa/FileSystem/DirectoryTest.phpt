@@ -39,6 +39,9 @@ class DirectoryTest extends TestCase
 		Assert::throws(function () {
 			new Directory(array());
 		}, 'Kappa\FileSystem\InvalidArgumentException');
+		Assert::throws(function () {
+			new Directory(__DIR__, Directory::CREATE);
+		}, 'Kappa\FileSystem\DirectoryAlreadyExistException');
 	}
 
 	public function testLoad()
