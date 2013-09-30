@@ -228,7 +228,7 @@ class File extends FileStorage
 		} else {
 			$file = $this->copy($target, true, $overwrite);
 			if (true === $this->remove() && $file->isCreated()) {
-				$this->setPath($file->getInfo()->getPathname());
+				$this->setPath($file->getPath());
 
 				return true;
 			} else {
