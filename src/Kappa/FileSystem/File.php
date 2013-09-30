@@ -71,14 +71,14 @@ class File extends FileStorage
 	{
 		$content = (string)$content;
 		if ($this->isCreated()) {
-			@file_put_contents($this->path, $content);
+			@file_put_contents($this->getPath(), $content);
 			if ($content === $this->read()) {
 				return true;
 			} else {
 				return false;
 			}
 		} else {
-			throw new IOException("File {$this->path} must be firstly created");
+			throw new IOException("File {$this->getPath()} must be firstly created");
 		}
 	}
 
@@ -122,7 +122,7 @@ class File extends FileStorage
 		if ($this->isCreated()) {
 			return file_get_contents($this->getPath());
 		} else {
-			throw new IOException("File {$this->path} must be firstly created");
+			throw new IOException("File {$this->getPath()} must be firstly created");
 		}
 	}
 
@@ -133,9 +133,9 @@ class File extends FileStorage
 	public function getHash()
 	{
 		if ($this->isCreated()) {
-			return md5_file($this->path);
+			return md5_file($this->getPath());
 		} else {
-			throw new IOException("File {$this->path} must be firstly created");
+			throw new IOException("File {$this->getPath()} must be firstly created");
 		}
 	}
 
@@ -146,11 +146,11 @@ class File extends FileStorage
 	public function remove()
 	{
 		if ($this->isCreated()) {
-			@unlink($this->path);
+			@unlink($this->getPath());
 
 			return !$this->isCreated();
 		} else {
-			throw new IOException("File {$this->path} must be firstly created");
+			throw new IOException("File {$this->getPath()} must be firstly created");
 		}
 	}
 
@@ -171,14 +171,14 @@ class File extends FileStorage
 			if (is_file($target) && !$overwrite) {
 				throw new IOException("Failed to copy file to '$target', because file already exist");
 			} else {
-				if (@copy($this->path, $target) === true) {
+				if (@copy($this->getPath(), $target) === true) {
 					return ($returnNew) ? new File($target, File::INTUITIVE) : true;
 				} else {
 					return false;
 				}
 			}
 		} else {
-			throw new IOException("File {$this->path} must be firstly created");
+			throw new IOException("File {$this->getPath()} must be firstly created");
 		}
 	}
 
@@ -199,7 +199,7 @@ class File extends FileStorage
 		} else {
 			$file = $this->copy($target, true, $overwrite);
 			if (true === $this->remove() && $file->isCreated()) {
-				$this->path = realpath($file->getInfo()->getPathname());
+				$this->getPath() = realpath($file->getInfo()->getPathname());
 
 				return true;
 			} else {
