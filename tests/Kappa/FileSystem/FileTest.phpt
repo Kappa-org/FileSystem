@@ -33,6 +33,35 @@ class FileTest extends TestCase
 		$this->dataPath = __DIR__ . '/../../data/';
 	}
 
+	public function testCreate()
+	{
+		$path = $this->randomFile();
+		Assert::false(is_file($path));
+		new File($path, File::CREATE);
+		Assert::true(is_file($path));
+		Assert::true(unlink($path));
+
+		Assert::throws(function () {
+			new File(array());
+		}, 'Kappa\FileSystem\InvalidArgumentException');
+		Assert::throws(function () {
+			new File(__FILE__, File::CREATE);
+		}, 'Kappa\FileSystem\FileAlreadyExistException');
+	}
+
+	public function testLoad()
+	{
+		$path = __FILE__;
+		Assert::true(is_file($path));
+		new File($path, File::LOAD);
+		Assert::throws(function () {
+			new File(array());
+		}, 'Kappa\FileSystem\InvalidArgumentException');
+		Assert::throws(function () {
+			new File('file.txt', File::LOAD);
+		}, 'Kappa\FileSystem\FileNotFoundException');
+	}
+
 	/**
 	 * @return string
 	 */
