@@ -40,6 +40,14 @@ class FileStorage
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getFileName()
+	{
+		return $this->getInfo()->getBasename();
+	}
+
+	/**
 	 * @return bool
 	 */
 	protected function isCreated()
