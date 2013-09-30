@@ -4,7 +4,7 @@ Easy system for work with files and directories
 
 ## Requirements:
 
-* PHP 5.3 or higher
+* PHP 5.4 or higher
 * [Composer](http://getcomposer.org/)
 
 ## Installation

@@ -1,7 +1,6 @@
 language: php
 
 php:
-        - "5.3.3"
         - "5.4"
 
 script: "VERBOSE=true ./vendor/bin/tester -s -j 25 tests/"
