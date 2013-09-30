@@ -187,6 +187,31 @@ class FileTest extends TestCase
 		Assert::true(rmdir($dirCopy));
 	}
 
+	public function testMove()
+	{
+		$path = $this->randomFile();
+		$file = new File($path);
+		$dirMove = $this->dataPath . DIRECTORY_SEPARATOR . 'formove';
+		Assert::true(mkdir($dirMove));
+		$movePath = $dirMove . DIRECTORY_SEPARATOR . 'move.txt';
+		$origPath = $file->getPath();
+		Assert::true(is_file($origPath));
+		Assert::true($file->move($movePath));
+		Assert::false(is_file($origPath));
+		Assert::same(realpath($movePath), $file->getPath());
+
+		Assert::throws(function () use ($file) {
+			$file->move(array());
+		}, 'Kappa\FileSystem\InvalidArgumentException');
+		Assert::throws(function ()use ($file, $movePath) {
+			new File($movePath);
+			$file->move($movePath);
+		}, 'Kappa\FileSystem\FileAlreadyExistException');
+
+		Assert::true(unlink($movePath));
+		Assert::true(rmdir($dirMove));
+	}
+
 	/**
 	 * @return string
 	 */
