@@ -153,6 +153,40 @@ class FileTest extends TestCase
 		Assert::true(unlink($newPath));
 	}
 
+	public function testCopy()
+	{
+		$path = $this->randomFile();
+		$file = new File($path);
+		$dirCopy = $this->dataPath . DIRECTORY_SEPARATOR . 'forcopy';
+		Assert::true(mkdir($dirCopy));
+		$copyPath = $dirCopy . DIRECTORY_SEPARATOR . 'copy.txt';
+		Assert::true($file->copy($copyPath, false));
+		Assert::true(is_file($path));
+		Assert::true(is_file($copyPath));
+		Assert::true(unlink($path));
+		Assert::true(unlink($copyPath));
+		Assert::true(rmdir($dirCopy));
+
+		$path = $this->randomFile();
+		$file = new File($path);
+		$dirCopy = $this->dataPath . DIRECTORY_SEPARATOR . 'forcopy';
+		Assert::true(mkdir($dirCopy));
+		$copyPath = $dirCopy . DIRECTORY_SEPARATOR . 'copy.txt';
+		Assert::type('Kappa\FileSystem\File', $file->copy($copyPath));
+
+		Assert::throws(function () use ($file) {
+			$file->copy(array());
+		}, 'Kappa\FileSystem\InvalidArgumentException');
+		Assert::throws(function () use ($file, $copyPath) {
+			$newFile = new File($copyPath);
+			$file->copy($copyPath);
+		}, 'Kappa\FileSystem\FileAlreadyExistException');
+
+		Assert::true(unlink($path));
+		Assert::true(unlink($copyPath));
+		Assert::true(rmdir($dirCopy));
+	}
+
 	/**
 	 * @return string
 	 */
