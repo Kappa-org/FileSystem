@@ -11,7 +11,6 @@
 
 namespace Kappa\Tests\FileSystem\FileTest;
 
-use Kappa\FileSystem\Directory;
 use Kappa\FileSystem\File;
 use Kappa\FileSystem\SplFileInfo;
 use Kappa\Tester\TestCase;
