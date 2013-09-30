@@ -29,3 +29,21 @@ class IOException extends \RuntimeException
 {
 
 }
+
+/**
+ * Class FileNotFoundException
+ * @package Kappa\FileSystem
+ */
+class FileNotFoundException extends \LogicException
+{
+
+}
+
+/**
+ * Class FileAlreadyExistException
+ * @package Kappa\FileSystem
+ */
+class FileAlreadyExistException extends \LogicException
+{
+
+}
