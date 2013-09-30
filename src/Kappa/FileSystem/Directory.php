@@ -23,7 +23,7 @@ class Directory extends FileStorage
 	public function getContent()
 	{
 		if ($this->isCreated()) {
-			$it = iterator_to_array(new \FilesystemIterator($this->path));
+			$it = iterator_to_array(new \FilesystemIterator($this->getPath()));
 			/** @var \SplFileInfo $file */
 			foreach ($it as $path => $file) {
 				if ($file->isFile()) {
@@ -36,7 +36,7 @@ class Directory extends FileStorage
 
 			return (isset($output)) ? $output : array();
 		} else {
-			throw new IOException("Directory {$this->path} must be firstly created");
+			throw new IOException("Directory {$this->getPath()} must be firstly created");
 		}
 	}
 
@@ -97,7 +97,7 @@ class Directory extends FileStorage
 				return ($returnNew) ? new Directory($dir->getInfo()->getPathname(), Directory::INTUITIVE) : true;
 			}
 		} else {
-			throw new IOException("Directory {$this->path} must be firstly created");
+			throw new IOException("Directory {$this->getPath()} must be firstly created");
 		}
 	}
 
@@ -118,7 +118,7 @@ class Directory extends FileStorage
 		} else {
 			$directory = $this->copy($target, true, $overwrite, array());
 			if ($this->remove() === true && $directory->isCreated()) {
-				$this->path = realpath($directory->getInfo()->getPathname());
+				$this->setPath(realpath($directory->getInfo()->getPathname()));
 
 				return true;
 			} else {
@@ -158,26 +158,29 @@ class Directory extends FileStorage
 	public function remove()
 	{
 		if ($this->isCreated()) {
-			$it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->path), \RecursiveIteratorIterator::CHILD_FIRST);
+			$it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->getPath()), \RecursiveIteratorIterator::CHILD_FIRST);
 			/** @var \SplFileInfo $file */
 			foreach ($it as $file) {
 				if (in_array($file->getBasename(), array('.', '..'))) {
 					continue;
 				} elseif ($file->isDir()) {
 					if (true !== @rmdir($file->getPathname())) {
-						throw new IOException("Failed to remove directory '$this->path'");
+						throw new IOException("Failed to remove directory '$this->getPath()'");
 					}
 				} elseif ($file->isFile() || $file->isLink()) {
 					if (true !== @unlink($file->getPathname())) {
-						throw new IOException("Failed to remove directory '$this->path'");
+						throw new IOException("Failed to remove directory '$this->getPath()'");
 					}
 				}
 			}
-			@rmdir($this->path);
+			if (@rmdir($this->getPath())) {
+				return !$this->isCreated();
+			} else {
+				return false;
+			}
 
-			return !$this->isCreated();
 		} else {
-			throw new IOException("Directory {$this->path} must be firstly created");
+			throw new IOException("Directory {$this->getPath()} must be firstly created");
 		}
 	}
 }
