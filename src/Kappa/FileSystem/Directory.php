@@ -17,6 +17,48 @@ namespace Kappa\FileSystem;
 class Directory extends FileStorage
 {
 	/**
+	 * @param string $path
+	 * @param int $action
+	 * @throws InvalidArgumentException
+	 * @throws DirectoryNotFoundException
+	 * @throws IOException
+	 * @throws DirectoryAlreadyExistException
+	 */
+	public function __construct($path, $action = self::CREATE)
+	{
+		if (!is_string($path)) {
+			throw new InvalidArgumentException("Path must be string, " . gettype($path) . " given");
+		}
+		if ($action === self::CREATE) {
+			if (!is_dir($path)) {
+				if ($this->create($path)) {
+					$this->setPath($path);
+				} else {
+					throw new IOException("Unable to create file '{$path}'");
+				}
+			} else {
+				throw new DirectoryAlreadyExistException("File '{$path}' already exist. You must use LOAD constant");
+			}
+		}
+		if ($action === self::LOAD) {
+			if (is_dir($path) && is_writable($path) && is_readable($path)) {
+				$this->setPath($path);
+			} else {
+				throw new DirectoryNotFoundException("File '{$path}' has not been found");
+			}
+		}
+	}
+
+	/**
+	 * @param string $path
+	 * @return bool
+	 */
+	private function create($path)
+	{
+		return @mkdir($path, 0777);
+	}
+
+	/**
 	 * @return array
 	 * @throws IOException
 	 */
