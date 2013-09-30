@@ -34,7 +34,7 @@ class FileStorage
 	/**
 	 * @return string
 	 */
-	protected function getPath()
+	public function getPath()
 	{
 		return $this->path;
 	}
