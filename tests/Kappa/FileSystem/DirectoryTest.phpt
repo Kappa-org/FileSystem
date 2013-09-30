@@ -14,6 +14,7 @@ namespace Kappa\FileSystem\Tests;
 
 use Kappa\FileSystem\Directory;
 use Kappa\FileSystem\File;
+use Kappa\FileSystem\SplFileInfo;
 use Kappa\Tester\TestCase;
 use Tester\Assert;
 
@@ -137,6 +138,14 @@ class DirectoryTest extends TestCase
 		$path = $this->randomDirectory();
 		$dir = new Directory($path);
 		Assert::same(realpath($path), $dir->getPath());
+		Assert::true(rmdir($path));
+	}
+
+	public function testGetInfo()
+	{
+		$path = $this->randomDirectory();
+		$dir = new Directory($path);
+		Assert::equal(new SplFileInfo($path), $dir->getInfo());
 		Assert::true(rmdir($path));
 	}
 
