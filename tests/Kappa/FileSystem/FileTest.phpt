@@ -219,6 +219,14 @@ class FileTest extends TestCase
 		Assert::true(unlink($path));
 	}
 
+	public function testGetInfo()
+	{
+		$path = $this->randomFile();
+		$file = new File($path);
+		Assert::equal(new SplFileInfo($path), $file->getInfo());
+		Assert::true(unlink($path));
+	}
+
 	/**
 	 * @return string
 	 */
