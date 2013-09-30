@@ -149,6 +149,60 @@ class DirectoryTest extends TestCase
 		Assert::true(rmdir($path));
 	}
 
+	public function testCopy()
+	{
+		$path = $this->randomDirectory();
+		$dir = new Directory($path);
+		$_filePath = $path . DIRECTORY_SEPARATOR . 'in.txt';
+		$_file = new File($_filePath);
+		$copyPath = $this->dataPath . DIRECTORY_SEPARATOR . 'copy';
+		Assert::false(is_dir($copyPath));
+		Assert::true(is_dir($path));
+		Assert::true($dir->copy($copyPath, false));
+		Assert::true(is_dir($copyPath));
+		Assert::true(is_file($_filePath));
+
+		Assert::true(unlink($_filePath));
+		Assert::true(unlink($copyPath . DIRECTORY_SEPARATOR . 'in.txt'));
+		Assert::true(rmdir($copyPath));
+		Assert::true(rmdir($path));
+
+		$path = $this->randomDirectory();
+		$dir = new Directory($path);
+		$_filePath = $path . DIRECTORY_SEPARATOR . 'in.txt';
+		$_file = new File($_filePath);
+		$copyPath = $this->dataPath . DIRECTORY_SEPARATOR . 'copy';
+		Assert::false(is_dir($copyPath));
+		Assert::true(is_dir($path));
+		$afterCopy = $dir->copy($copyPath);
+		Assert::type('Kappa\FileSystem\Directory', $afterCopy);
+		Assert::same(realpath($copyPath), $afterCopy->getPath());
+		Assert::true(is_dir($copyPath));
+		Assert::true(is_file($_filePath));
+
+		Assert::true(unlink($_filePath));
+		Assert::true(unlink($copyPath . DIRECTORY_SEPARATOR . 'in.txt'));
+		Assert::true(rmdir($copyPath));
+		Assert::true(rmdir($path));
+
+		$path = $this->randomDirectory();
+		$dir = new Directory($path);
+		$_filePath = $path . DIRECTORY_SEPARATOR . 'in.txt';
+		$_file = new File($_filePath);
+		$copyPath = $this->dataPath . DIRECTORY_SEPARATOR . 'copy';
+		Assert::false(is_dir($copyPath));
+		Assert::true(is_dir($path));
+		$afterCopy = $dir->copy($copyPath, true, false, array('in.txt'));
+		Assert::type('Kappa\FileSystem\Directory', $afterCopy);
+		Assert::same(realpath($copyPath), $afterCopy->getPath());
+		Assert::true(is_dir($copyPath));
+		Assert::false(is_file($copyPath . DIRECTORY_SEPARATOR . 'in.txt'));
+
+		Assert::true(unlink($_filePath));
+		Assert::true(rmdir($copyPath));
+		Assert::true(rmdir($path));
+	}
+
 	/**
 	 * @return string
 	 */
