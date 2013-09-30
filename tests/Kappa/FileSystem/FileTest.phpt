@@ -64,11 +64,8 @@ class FileTest extends TestCase
 
 	public function testGetBaseName()
 	{
-		$path = $this->randomFile();
-		$file = new File($path, File::CREATE);
-		$name = explode(DIRECTORY_SEPARATOR, $path);
-		Assert::same($name[count($name) - 1], $file->getBaseName());
-		Assert::true(unlink($path));
+		$file = new File(__FILE__, File::LOAD);
+		Assert::same('FileTest.phpt', $file->getBaseName());
 	}
 
 	public function testOverwrite()
