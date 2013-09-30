@@ -203,6 +203,22 @@ class DirectoryTest extends TestCase
 		Assert::true(rmdir($path));
 	}
 
+	public function testMove()
+	{
+		$path = $this->randomDirectory();
+		$dir = new Directory($path);
+		$movePath = $this->dataPath . DIRECTORY_SEPARATOR . 'move';
+		Assert::true($dir->move($movePath));
+		Assert::false(is_dir($path));
+		Assert::true(is_dir($movePath));
+		Assert::same(realpath($movePath), $dir->getPath());
+		Assert::true(rmdir($movePath));
+
+		Assert::throws(function () use ($dir) {
+			$dir->move(array());
+		}, 'Kappa\FileSystem\InvalidArgumentException');
+	}
+
 	/**
 	 * @return string
 	 */
