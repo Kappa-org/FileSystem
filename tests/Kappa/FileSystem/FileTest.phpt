@@ -10,7 +10,7 @@
  * @testCase
  */
 
-namespace Kappa\Tests\FileSystem\FileTest;
+namespace Kappa\FileSystem\Tests;
 
 use Kappa\FileSystem\File;
 use Kappa\FileSystem\SplFileInfo;
