@@ -2,6 +2,7 @@ language: php
 
 php:
         - "5.4"
+        - "5.5"
 
 script: "VERBOSE=true ./vendor/bin/tester -s -c tests/php.ini-unix -j 29 tests/"
 
