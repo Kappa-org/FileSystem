@@ -6,6 +6,7 @@ Easy system for work with files and directories
 
 * PHP 5.4 or higher
 * [Composer](http://getcomposer.org/)
+* For work with FileUpload or Image class require [Nette Framework](http:://nette.org)
 
 ## Installation
 
