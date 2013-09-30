@@ -47,3 +47,21 @@ class FileAlreadyExistException extends \LogicException
 {
 
 }
+
+/**
+ * Class DirectoryNotFoundException
+ * @package Kappa\FileSystem
+ */
+class DirectoryNotFoundException extends \LogicException
+{
+
+}
+
+/**
+ * Class DirectoryAlreadyExistException
+ * @package Kappa\FileSystem
+ */
+class DirectoryAlreadyExistException extends \LogicException
+{
+
+}
