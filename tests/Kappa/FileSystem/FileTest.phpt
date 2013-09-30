@@ -144,6 +144,7 @@ class FileTest extends TestCase
 		Assert::true(is_file($path));
 		Assert::false(is_file($this->dataPath . DIRECTORY_SEPARATOR . 'renamed.txt'));
 		Assert::true($file->rename('renamed.txt'));
+		Assert::same(realpath($newPath), $file->getPath());
 		Assert::true(is_file($newPath));
 		Assert::false(is_file($path));
 
