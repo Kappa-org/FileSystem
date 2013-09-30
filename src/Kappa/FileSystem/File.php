@@ -155,6 +155,35 @@ class File extends FileStorage
 	}
 
 	/**
+	 * @param string $newName
+	 * @param bool $overwrite
+	 * @return bool
+	 * @throws InvalidArgumentException
+	 * @throws IOException
+	 */
+	public function rename($newName, $overwrite = false)
+	{
+		if ($this->isCreated()) {
+			if (!is_string($newName)) {
+				throw new InvalidArgumentException("New name must to be string, " . gettype($newName) . " given");
+			}
+			$newPath = $this->getInfo()->getPath() . DIRECTORY_SEPARATOR . $newName;
+			if (is_file($newPath) && !$overwrite) {
+				throw new IOException("Unable to overwrite file '{$newPath}'");
+			}
+			if (@rename($this->getPath(), $newPath)) {
+				$this->setPath($newPath);
+
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			throw new IOException("Directory {$this->getPath()} must be firstly created");
+		}
+	}
+
+	/**
 	 * @param string $target
 	 * @param bool $returnNew
 	 * @param bool $overwrite

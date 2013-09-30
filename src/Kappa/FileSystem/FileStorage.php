@@ -77,45 +77,4 @@ class FileStorage
 			throw new IOException("Directory {$this->path} must be firstly created");
 		}
 	}
-
-	/**
-	 * @param string $newName
-	 * @param bool $overwrite
-	 * @return bool|File|Directory
-	 * @throws InvalidArgumentException
-	 * @throws IOException
-	 */
-	public function rename($newName, $overwrite = false)
-	{
-		if ($this->isCreated()) {
-			if (!is_string($newName)) {
-				throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($newName) . " given");
-			}
-			$newPath = $this->getInfo()->getPath() . DIRECTORY_SEPARATOR . $newName;
-			if ($this instanceof File) {
-				if (is_file($newPath) && !$overwrite) {
-					throw new IOException("Failed to rename to '$newPath', because file $newPath already exist");
-				}
-			}
-			if ($this instanceof Directory) {
-				if (is_dir($newPath) && !$overwrite) {
-					throw new IOException("Failed to rename to '$newPath', because file $newPath already exist");
-				} else {
-					if (is_dir($newPath)) {
-						$directory = new Directory($newPath);
-						$directory->remove();
-					}
-				}
-			}
-			if (@rename($this->path, $newPath) === true) {
-				$this->path = $newPath;
-
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			throw new IOException("Directory {$this->path} must be firstly created");
-		}
-	}
 }
