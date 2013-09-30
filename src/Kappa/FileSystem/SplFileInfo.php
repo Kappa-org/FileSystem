@@ -48,14 +48,8 @@ class SplFileInfo extends \SplFileInfo
 	 */
 	public function isImage()
 	{
-		$types = array(
-			'image/bmp',
-			'image/gif',
-			'image/jpeg',
-			'image/png',
-		);
 		$imageInfo = @getimagesize($this->getPathname());
-		if (in_array($imageInfo['mime'], $types)) {
+		if (in_array($imageInfo['mime'], array('image/bmp', 'image/gif', 'image/jpeg', 'image/png'))) {
 			return true;
 		} else {
 			return false;
