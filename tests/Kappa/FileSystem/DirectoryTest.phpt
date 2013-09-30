@@ -52,6 +52,15 @@ class DirectoryTest extends TestCase
 		}, 'Kappa\FileSystem\DirectoryNotFoundException');
 	}
 
+	public function testRemove()
+	{
+		$path = $this->randomDirectory();
+		$dir = new Directory($path);
+		Assert::true(is_dir($path));
+		Assert::true($dir->remove());
+		Assert::false(is_dir($path));
+	}
+
 	/**
 	 * @return string
 	 */
