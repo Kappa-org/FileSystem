@@ -36,7 +36,7 @@ class FileTest extends TestCase
 	/**
 	 * @return string
 	 */
-	private function generateFileName()
+	private function randomFile()
 	{
 		return $path = $this->dataPath . DIRECTORY_SEPARATOR . time() . rand(1000000, 999999999) . '.txt';
 	}
