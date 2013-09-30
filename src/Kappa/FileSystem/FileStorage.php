@@ -16,64 +16,41 @@ namespace Kappa\FileSystem;
  */
 class FileStorage
 {
-	const STRICT = 0;
+	const LOAD = 0;
 
-	const INTUITIVE = 1;
+	const CREATE = 1;
 
 	/** @var string */
-	protected $path;
+	private $path;
 
 	/**
 	 * @param string $path
-	 * @param int $sensitivity
-	 * @throws InvalidArgumentException
 	 */
-	public function __construct($path, $sensitivity = self::STRICT)
+	protected function setPath($path)
 	{
-		if (!is_string($path)) {
-			throw new InvalidArgumentException(__METHOD__ . " Argument must to be string, " . gettype($path) . " given");
-		}
-		$this->path = $path;
-		if ($this->isCreated()) {
-			$this->path = realpath($path);
-		} else {
-			if ($sensitivity === self::INTUITIVE) {
-				$this->create();
-			}
-		}
+		$this->path = realpath($path);
 	}
 
 	/**
-	 * @return bool
-	 * @throws IOException
+	 * @return string
 	 */
-	public function create()
+	protected function getPath()
 	{
-		if (!$this->isCreated()) {
-			if ($this instanceof File) {
-				$file = @fopen($this->path, 'w+');
-				@fclose($file);
-			} elseif ($this instanceof Directory) {
-				@mkdir($this->path, 0777);
-			}
-			$this->path = realpath($this->path);
-
-			return $this->isCreated();
-		} else {
-			return true;
-		}
+		return $this->path;
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isCreated()
+	protected function isCreated()
 	{
-		if (is_writable($this->path) && is_readable($this->path)) {
+		if (is_writable($this->getPath()) && is_readable($this->getPath())) {
 			if ($this instanceof File) {
 				return is_file($this->path);
 			} elseif ($this instanceof Directory) {
 				return is_dir($this->path);
+			} else {
+				return false;
 			}
 		} else {
 			return false;

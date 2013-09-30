@@ -17,6 +17,51 @@ namespace Kappa\FileSystem;
 class File extends FileStorage
 {
 	/**
+	 * @param string $path
+	 * @param int $action
+	 * @throws FileNotFoundException
+	 * @throws InvalidArgumentException
+	 * @throws IOException
+	 * @throws FileAlreadyExistException
+	 */
+	public function __construct($path, $action = self::CREATE)
+	{
+		if (!is_string($path)) {
+			throw new InvalidArgumentException("Path must be string, " . gettype($path) . " given");
+		}
+		if ($action === self::CREATE) {
+			if (!is_file($path)) {
+				if ($this->create($path)) {
+					$this->setPath($path);
+				} else {
+					throw new IOException("Unable to create file '{$path}'");
+				}
+			} else {
+				throw new FileAlreadyExistException("File '{$path}' already exist. You must use LOAD constant");
+			}
+		}
+		if ($action === self::LOAD) {
+			if (is_file($path) && is_writable($path) && is_readable($path)) {
+				$this->setPath($path);
+			} else {
+				throw new FileNotFoundException("File '{$path}' has not been found");
+			}
+		}
+	}
+
+	/**
+	 * @param string $path
+	 * @return bool
+	 */
+	private function create($path)
+	{
+		$file = @fopen($path, 'w+');
+		@fclose($file);
+
+		return is_file($path);
+	}
+
+	/**
 	 * @param null $content
 	 * @return bool
 	 * @throws InvalidArgumentException
