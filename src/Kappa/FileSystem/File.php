@@ -69,12 +69,10 @@ class File extends FileStorage
 	 */
 	public function overwrite($content = null)
 	{
+		$content = (string)$content;
 		if ($this->isCreated()) {
-			if ($content && !is_string($content) && !is_numeric($content)) {
-				throw new InvalidArgumentException(__METHOD__ . " First argument expect to be string, null or number, " . gettype($content) . " given");
-			}
 			@file_put_contents($this->path, $content);
-			if ((string)$content === $this->read()) {
+			if ($content === $this->read()) {
 				return true;
 			} else {
 				return false;
@@ -122,7 +120,7 @@ class File extends FileStorage
 	public function read()
 	{
 		if ($this->isCreated()) {
-			return file_get_contents($this->path);
+			return file_get_contents($this->getPath());
 		} else {
 			throw new IOException("File {$this->path} must be firstly created");
 		}
