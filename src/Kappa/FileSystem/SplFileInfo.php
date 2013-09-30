@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Kappa package.
+ * This file is part of the Kappa/FileSystem package.
  *
  * (c) Ondřej Záruba <zarubaondra@gmail.com>
  *
@@ -12,7 +12,6 @@ namespace Kappa\FileSystem;
 
 /**
  * Class SplFileInfo
- *
  * @package Kappa\FileSystem
  */
 class SplFileInfo extends \SplFileInfo

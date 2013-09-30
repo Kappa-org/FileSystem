@@ -1,12 +1,13 @@
 <?php
 /**
- * FileTest.phpt
+ * This file is part of the Kappa/FileSystem package.
  *
- * @author Ondřej Záruba <zarubaondra@gmail.com>
- * @date 4.5.13
+ * (c) Ondřej Záruba <zarubaondra@gmail.com>
  *
- * @package Kappa\FileSystem
- * @testCase Kappa\Tests\FileSystem\FileTest
+ * For the full copyright and license information, please view the license.md
+ * file that was distributed with this source code.
+ *
+ * @testCase
  */
 
 namespace Kappa\Tests\FileSystem\FileTest;
