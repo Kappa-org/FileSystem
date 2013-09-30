@@ -112,6 +112,20 @@ class DirectoryTest extends TestCase
 		Assert::true(rmdir($path));
 	}
 
+	public function testGetDirectories()
+	{
+		$path = $this->randomDirectory();
+		$_filePath = $path . DIRECTORY_SEPARATOR . 'test.txt';
+		$_dirPath = $path . DIRECTORY_SEPARATOR . 'test';
+		$dir = new Directory($path);
+		new File($_filePath);
+		$_dir = new Directory($_dirPath);
+		Assert::equal(array($_dir->getPath() => $_dir), $dir->getDirectories());
+		Assert::true(unlink($_filePath));
+		Assert::true(rmdir($_dirPath));
+		Assert::true(rmdir($path));
+	}
+
 	/**
 	 * @return string
 	 */
