@@ -151,27 +151,27 @@ class Directory extends FileStorage
 
 	/**
 	 * @param string $target
-	 * @param array $ignore
 	 * @param bool $returnNew
 	 * @param bool $overwrite
-	 * @return Directory
+	 * @param array $ignore
+	 * @return bool|Directory
 	 * @throws InvalidArgumentException
 	 * @throws IOException
+	 * @throws DirectoryAlreadyExistException
 	 */
 	public function copy($target, $returnNew = true, $overwrite = false, array $ignore = array())
 	{
 		if ($this->isCreated()) {
 			if (!is_string($target)) {
-				throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($target) . " given");
+				throw new InvalidArgumentException("Target must to be string, " . gettype($target) . " given");
 			}
 			if (file_exists($target) && !$overwrite) {
-				throw new IOException("Failed to copy directory '$target'");
+				throw new DirectoryAlreadyExistException("Directory '{$this->getPath()}' already exist");
 			} else {
 				$dir = new Directory($target);
-				$dir->create();
-				$this->_copy($this, $dir->getInfo()->getPathname(), $ignore);
+				$this->doCopy($this, $dir->getPath(), $ignore);
 
-				return ($returnNew) ? new Directory($dir->getInfo()->getPathname(), Directory::INTUITIVE) : true;
+				return ($returnNew) ? new Directory($dir->getPath(), Directory::LOAD) : true;
 			}
 		} else {
 			throw new IOException("Directory {$this->getPath()} must be firstly created");
@@ -209,20 +209,19 @@ class Directory extends FileStorage
 	 * @param string $copyDir
 	 * @param array $ignore
 	 */
-	private function _copy(Directory $directory, $copyDir, array $ignore = array())
+	private function doCopy(Directory $directory, $copyDir, array $ignore = array())
 	{
 		/** @var $obj \Kappa\FileSystem\File|\Kappa\FileSystem\Directory */
 		foreach ($directory->getContent() as $path => $obj) {
 			if ($obj instanceof File) {
 				if (!in_array($obj->getInfo()->getBasename(), $ignore)) {
-					@copy($path, $copyDir . DIRECTORY_SEPARATOR . $obj->getInfo()->getBasename());
+					@copy($path, $copyDir . DIRECTORY_SEPARATOR . $obj->getBaseName());
 				}
 			}
 			if ($obj instanceof Directory) {
 				if (!in_array($obj->getInfo()->getBasename(), $ignore)) {
-					$newCopy = new Directory($copyDir . DIRECTORY_SEPARATOR . $obj->getInfo()->getBasename());
-					$newCopy->create();
-					$this->_copy($obj, $newCopy->getInfo()->getPathname());
+					$newCopy = new Directory($copyDir . DIRECTORY_SEPARATOR . $obj->getBaseName());
+					$this->doCopy($obj, $newCopy->getPath());
 				}
 			}
 		}
