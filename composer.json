@@ -21,6 +21,9 @@
 	"require-dev": {
 		"kappa/tester": "1.0.*"
 	},
+	"suggest": {
+		"nette/nette": "For work with FileUpload and Image classes"
+	},
 	"autoload": {
 		"psr-0": {
 			"Kappa": "src/"
