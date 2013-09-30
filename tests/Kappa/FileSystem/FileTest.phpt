@@ -102,6 +102,17 @@ class FileTest extends TestCase
 		Assert::true(unlink($path));
 	}
 
+	public function testIsCreated()
+	{
+		$path = $this->randomFile();
+		$file = new File($path);
+		Assert::same("", $file->read());
+		Assert::true(unlink($path));
+		Assert::throws(function () use($file) {
+			$file->read();
+		}, 'Kappa\FileSystem\IOException');
+	}
+
 	/**
 	 * @return string
 	 */
