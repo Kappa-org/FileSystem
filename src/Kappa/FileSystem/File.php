@@ -195,13 +195,13 @@ class File extends FileStorage
 	{
 		if ($this->isCreated()) {
 			if (!is_string($target)) {
-				throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($target) . " given");
+				throw new InvalidArgumentException("Target must to be string, " . gettype($target) . " given");
 			}
 			if (is_file($target) && !$overwrite) {
-				throw new IOException("Failed to copy file to '$target', because file already exist");
+				throw new IOException("Unable to copy file to '{$target}', because file already exist");
 			} else {
 				if (@copy($this->getPath(), $target) === true) {
-					return ($returnNew) ? new File($target, File::INTUITIVE) : true;
+					return ($returnNew) ? new File($target, File::LOAD) : true;
 				} else {
 					return false;
 				}
