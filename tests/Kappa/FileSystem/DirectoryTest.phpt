@@ -126,6 +126,12 @@ class DirectoryTest extends TestCase
 		Assert::true(rmdir($path));
 	}
 
+	public function testGetFileName()
+	{
+		$dir = new Directory(__DIR__, Directory::LOAD);
+		Assert::same('FileSystem', $dir->getFileName());
+	}
+
 	/**
 	 * @return string
 	 */
