@@ -59,6 +59,41 @@ class Directory extends FileStorage
 	}
 
 	/**
+	 * @param string $newName
+	 * @param bool $overwrite
+	 * @return bool
+	 * @throws InvalidArgumentException
+	 * @throws IOException
+	 * @throws DirectoryAlreadyExistException
+	 */
+	public function rename($newName, $overwrite = false)
+	{
+		if ($this->isCreated()) {
+			if (!is_string($newName)) {
+				throw new InvalidArgumentException("Name must to be string, " . gettype($newName) . " given");
+			}
+			$newPath = $this->getInfo()->getPath() . DIRECTORY_SEPARATOR . $newName;
+			if (is_dir($newPath) && !$overwrite) {
+				throw new DirectoryAlreadyExistException("Directory '{$newPath}' already exist");
+			} else {
+				if (is_dir($newPath)) {
+					$directory = new Directory($newPath, Directory::LOAD);
+					$directory->remove();
+				}
+			}
+			if (@rename($this->getPath(), $newPath)) {
+				$this->setPath($newPath);
+
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			throw new IOException("Directory {$this->getPath()} must be firstly created");
+		}
+	}
+
+	/**
 	 * @return array
 	 * @throws IOException
 	 */
