@@ -132,6 +132,14 @@ class DirectoryTest extends TestCase
 		Assert::same('FileSystem', $dir->getBaseName());
 	}
 
+	public function testGetPath()
+	{
+		$path = $this->randomDirectory();
+		$dir = new Directory($path);
+		Assert::same(realpath($path), $dir->getPath());
+		Assert::true(rmdir($path));
+	}
+
 	/**
 	 * @return string
 	 */
