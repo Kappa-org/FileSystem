@@ -13,6 +13,7 @@
 namespace Kappa\FileSystem\Tests;
 
 use Kappa\FileSystem\Directory;
+use Kappa\FileSystem\File;
 use Kappa\Tester\TestCase;
 use Tester\Assert;
 
@@ -81,6 +82,20 @@ class DirectoryTest extends TestCase
 		}, 'Kappa\FileSystem\DirectoryAlreadyExistException');
 
 		Assert::true(rmdir($renamed));
+	}
+
+	public function testGetContent()
+	{
+		$path = $this->randomDirectory();
+		$_filePath = $path . DIRECTORY_SEPARATOR . 'test.txt';
+		$_dirPath = $path . DIRECTORY_SEPARATOR . 'test';
+		$dir = new Directory($path);
+		$_file = new File($_filePath);
+		$_dir = new Directory($_dirPath);
+		Assert::equal(array($_file->getPath() => $_file, $_dir->getPath() => $_dir), $dir->getContent());
+		Assert::true(unlink($_filePath));
+		Assert::true(rmdir($_dirPath));
+		Assert::true(rmdir($path));
 	}
 
 	/**
