@@ -181,25 +181,31 @@ class Directory extends FileStorage
 	/**
 	 * @param string $target
 	 * @param bool $overwrite
+	 * @param array $ignore
 	 * @return bool
 	 * @throws InvalidArgumentException
 	 * @throws IOException
+	 * @throws DirectoryAlreadyExistException
 	 */
-	public function move($target, $overwrite = false)
+	public function move($target, $overwrite = false, array $ignore = array())
 	{
 		if (!is_string($target)) {
-			throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($target) . " given");
+			throw new InvalidArgumentException("Target must to be string, " . gettype($target) . " given");
 		}
 		if (file_exists($target) && !$overwrite) {
-			throw new IOException("Failed to copy directory '$target'");
+			throw new DirectoryAlreadyExistException("Directory '{$target}' already exist");
 		} else {
-			$directory = $this->copy($target, true, $overwrite, array());
-			if ($this->remove() === true && $directory->isCreated()) {
-				$this->setPath(realpath($directory->getInfo()->getPathname()));
+			$directory = $this->copy($target, true, $overwrite, $ignore);
+			if ($directory) {
+				if($this->remove()) {
+					$this->setPath(realpath($directory->getPath()));
 
-				return true;
+					return true;
+				} else {
+					throw new IOException("Directory {$this->getPath()} has not been removed");
+				}
 			} else {
-				return false;
+				throw new IOException("Unable to copy directory to '{$target}'");
 			}
 		}
 	}
