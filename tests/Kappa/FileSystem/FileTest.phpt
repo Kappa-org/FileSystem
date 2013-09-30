@@ -68,6 +68,7 @@ class FileTest extends TestCase
 		$file = new File($path, File::CREATE);
 		$name = explode(DIRECTORY_SEPARATOR, $path);
 		Assert::same($name[count($name) - 1], $file->getFileName());
+		Assert::true(unlink($path));
 	}
 
 	/**
