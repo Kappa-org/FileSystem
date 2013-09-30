@@ -91,6 +91,17 @@ class FileTest extends TestCase
 		Assert::true(unlink($path));
 	}
 
+	public function testClan()
+	{
+		$path = $this->randomFile();
+		$file = new File($path);
+		Assert::true($file->overwrite("Hello"));
+		Assert::same("Hello", $file->read());
+		Assert::true($file->clean());
+		Assert::same("", $file->read());
+		Assert::true(unlink($path));
+	}
+
 	/**
 	 * @return string
 	 */
