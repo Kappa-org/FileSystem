@@ -113,6 +113,20 @@ class FileTest extends TestCase
 		}, 'Kappa\FileSystem\IOException');
 	}
 
+	public function testAppend()
+	{
+		$path = $this->randomFile();
+		$file = new File($path);
+		Assert::same("", $file->read());
+		Assert::true($file->append("Hello"));
+		Assert::same("Hello", $file->read());
+		Assert::true($file->append("Budry"));
+		Assert::same("Hello" . PHP_EOL . "Budry", $file->read());
+		Assert::true($file->append("test", false));
+		Assert::same("Hello" . PHP_EOL . "Budry test", $file->read());
+		Assert::true(unlink($path));
+	}
+
 	/**
 	 * @return string
 	 */
