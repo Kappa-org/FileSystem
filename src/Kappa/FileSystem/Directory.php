@@ -104,10 +104,10 @@ class Directory extends FileStorage
 			/** @var \SplFileInfo $file */
 			foreach ($it as $path => $file) {
 				if ($file->isFile()) {
-					$output[$path] = new File($file->getPathname());
+					$output[$path] = new File($file->getPathname(), File::LOAD);
 				}
 				if ($file->isDir()) {
-					$output[$path] = new Directory($file->getPathname());
+					$output[$path] = new Directory($file->getPathname(), Directory::LOAD);
 				}
 			}
 
