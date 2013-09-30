@@ -127,6 +127,15 @@ class FileTest extends TestCase
 		Assert::true(unlink($path));
 	}
 
+	public function testRemove()
+	{
+		$path = $this->randomFile();
+		$file = new File($path);
+		Assert::true(is_file($file->getPath()));
+		Assert::true($file->remove());
+		Assert::false(is_file($file->getPath()));
+	}
+
 	/**
 	 * @return string
 	 */
