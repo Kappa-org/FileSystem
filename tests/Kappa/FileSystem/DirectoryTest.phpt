@@ -41,6 +41,14 @@ class DirectoryTest extends TestCase
 		}, 'Kappa\FileSystem\InvalidArgumentException');
 	}
 
+	public function testLoad()
+	{
+		new Directory(__DIR__, Directory::LOAD);
+		Assert::throws(function () {
+			new Directory('dir', Directory::LOAD);
+		}, 'Kappa\FileSystem\DirectoryNotFoundException');
+	}
+
 	/**
 	 * @return string
 	 */
