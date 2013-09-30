@@ -105,7 +105,7 @@ class FileTest extends TestCase
 		$file = new File($path);
 		Assert::same("", $file->read());
 		Assert::true(unlink($path));
-		Assert::throws(function () use($file) {
+		Assert::throws(function () use ($file) {
 			$file->read();
 		}, 'Kappa\FileSystem\IOException');
 	}
@@ -201,7 +201,7 @@ class FileTest extends TestCase
 		Assert::throws(function () use ($file) {
 			$file->move(array());
 		}, 'Kappa\FileSystem\InvalidArgumentException');
-		Assert::throws(function ()use ($file, $movePath) {
+		Assert::throws(function () use ($file, $movePath) {
 			new File($movePath);
 			$file->move($movePath);
 		}, 'Kappa\FileSystem\FileAlreadyExistException');

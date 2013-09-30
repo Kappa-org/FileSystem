@@ -197,7 +197,7 @@ class Directory extends FileStorage
 		} else {
 			$directory = $this->copy($target, true, $overwrite, $ignore);
 			if ($directory) {
-				if($this->remove()) {
+				if ($this->remove()) {
 					$this->setPath(realpath($directory->getPath()));
 
 					return true;
@@ -260,7 +260,6 @@ class Directory extends FileStorage
 			} else {
 				return false;
 			}
-
 		} else {
 			throw new IOException("Directory {$this->getPath()} must be firstly created");
 		}
