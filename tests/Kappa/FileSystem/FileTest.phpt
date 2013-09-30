@@ -136,6 +136,23 @@ class FileTest extends TestCase
 		Assert::false(is_file($file->getPath()));
 	}
 
+	public function testRename()
+	{
+		$path = $this->randomFile();
+		$newPath = $this->dataPath . DIRECTORY_SEPARATOR . 'renamed.txt';
+		$file = new File($path);
+		Assert::true(is_file($path));
+		Assert::false(is_file($this->dataPath . DIRECTORY_SEPARATOR . 'renamed.txt'));
+		Assert::true($file->rename('renamed.txt'));
+		Assert::true(is_file($newPath));
+		Assert::false(is_file($path));
+
+		Assert::throws(function () use ($file) {
+			$file->rename('renamed.txt', false);
+		}, 'Kappa\FileSystem\IOException');
+		Assert::true(unlink($newPath));
+	}
+
 	/**
 	 * @return string
 	 */
