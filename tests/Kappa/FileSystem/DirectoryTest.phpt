@@ -38,22 +38,22 @@ class DirectoryTest extends TestCase
 	public function testCreate()
 	{
 		$directory = new Directory($this->generateDirName());
-		Assert::false($directory->isUsable());
+		Assert::false($directory->isCreated());
 		Assert::true($directory->create());
-		Assert::true($directory->isUsable());
+		Assert::true($directory->isCreated());
 		Assert::true($directory->remove());
 
 		$directory = new Directory($this->generateDirName(), Directory::INTUITIVE);
-		Assert::true($directory->isUsable());
+		Assert::true($directory->isCreated());
 		Assert::true($directory->remove());
 	}
 
-	public function testisUsable()
+	public function testisCreated()
 	{
 		$directory = new Directory($this->generateDirName());
-		Assert::same(file_exists($directory->getInfo()->getPathname()), $directory->isUsable());
+		Assert::same(file_exists($directory->getInfo()->getPathname()), $directory->isCreated());
 		Assert::true($directory->create());
-		Assert::same(file_exists($directory->getInfo()->getPathname()), $directory->isUsable());
+		Assert::same(file_exists($directory->getInfo()->getPathname()), $directory->isCreated());
 		Assert::true($directory->remove());
 	}
 
@@ -76,7 +76,7 @@ class DirectoryTest extends TestCase
 		Assert::true($directory->rename('renamed'));
 		Assert::false(file_exists($path));
 		Assert::true(file_exists($this->dataPath . '/renamed'));
-		Assert::true($directory->isUsable());
+		Assert::true($directory->isCreated());
 		Assert::true($directory->remove());
 	}
 
@@ -120,11 +120,11 @@ class DirectoryTest extends TestCase
 		Assert::true($directory->create());
 		$_file = new File($path . DIRECTORY_SEPARATOR . time() . rand(1000000,999999999) . '.txt');
 		Assert::true($_file->create());
-		Assert::true($directory->isUsable());
-		Assert::true($_file->isUsable());
+		Assert::true($directory->isCreated());
+		Assert::true($_file->isCreated());
 		Assert::true($directory->remove());
-		Assert::false($directory->isUsable());
-		Assert::false($_file->isUsable());
+		Assert::false($directory->isCreated());
+		Assert::false($_file->isCreated());
 	}
 
 	public function testCopy()

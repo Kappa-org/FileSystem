@@ -34,7 +34,7 @@ class FileStorage
 			throw new InvalidArgumentException(__METHOD__ . " Argument must to be string, " . gettype($path) . " given");
 		}
 		$this->path = $path;
-		if($this->isUsable()) {
+		if($this->isCreated()) {
 			$this->path = realpath($path);
 		} else {
 			if($sensitivity === self::INTUITIVE) {
@@ -50,7 +50,7 @@ class FileStorage
 	 */
 	public function create()
 	{
-		if(!$this->isUsable()) {
+		if(!$this->isCreated()) {
 			if($this instanceof File) {
 				$file = @fopen($this->path, 'w+');
 				@fclose($file);
@@ -58,7 +58,7 @@ class FileStorage
 				@mkdir($this->path, 0777);
 			}
 			$this->path = realpath($this->path);
-			return $this->isUsable();
+			return $this->isCreated();
 		} else {
 			return true;
 		}
@@ -67,7 +67,7 @@ class FileStorage
 	/**
 	 * @return bool
 	 */
-	public function isUsable()
+	public function isCreated()
 	{
 		if (is_writable($this->path) && is_readable($this->path)) {
 			if($this instanceof File) {
@@ -86,7 +86,7 @@ class FileStorage
 	 */
 	public function getInfo()
 	{
-		if($this->isUsable()) {
+		if($this->isCreated()) {
 			return new SplFileInfo($this->path);
 		} else {
 			throw new IOException("Directory {$this->path} must be firstly created");
@@ -102,7 +102,7 @@ class FileStorage
 	 */
 	public function rename($newName, $overwrite = false)
 	{
-		if($this->isUsable()) {
+		if($this->isCreated()) {
 			if (!is_string($newName)) {
 				throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($newName) . " given");
 			}

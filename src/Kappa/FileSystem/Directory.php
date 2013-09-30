@@ -22,7 +22,7 @@ class Directory extends FileStorage
 	 */
 	public function getContent()
 	{
-		if($this->isUsable()) {
+		if($this->isCreated()) {
 			$it = iterator_to_array(new \FilesystemIterator($this->path));
 			/** @var \SplFileInfo $file */
 			foreach($it as $path => $file) {
@@ -80,7 +80,7 @@ class Directory extends FileStorage
 	 */
 	public function copy($target, $returnNew = true, $overwrite = false, array $ignore = array())
 	{
-		if($this->isUsable()) {
+		if($this->isCreated()) {
 			if (!is_string($target)) {
 				throw new InvalidArgumentException(__METHOD__ . " First argument must to be string, " . gettype($target) . " given");
 			}
@@ -113,7 +113,7 @@ class Directory extends FileStorage
 			throw new IOException("Failed to copy directory '$target'");
 		} else {
 			$directory = $this->copy($target, true, $overwrite, array());
-			if($this->remove() === true && $directory->isUsable()) {
+			if($this->remove() === true && $directory->isCreated()) {
 				$this->path = realpath($directory->getInfo()->getPathname());
 				return true;
 			} else {
@@ -152,7 +152,7 @@ class Directory extends FileStorage
 	 */
 	public function remove()
 	{
-		if($this->isUsable()) {
+		if($this->isCreated()) {
 			$it = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->path), \RecursiveIteratorIterator::CHILD_FIRST);
 			/** @var \SplFileInfo $file */
 			foreach ($it as $file) {
@@ -169,7 +169,7 @@ class Directory extends FileStorage
 				}
 			}
 			@rmdir($this->path);
-			return !$this->isUsable();
+			return !$this->isCreated();
 		} else {
 			throw new IOException("Directory {$this->path} must be firstly created");
 		}
