@@ -81,6 +81,15 @@ class FileTest extends TestCase
 		Assert::true(unlink($path));
 	}
 
+	public function testRead()
+	{
+		$path = $this->randomFile();
+		$file = new File($path);
+		Assert::same("", $file->read());
+		Assert::true($file->overwrite("Hello"));
+		Assert::same("Hello", $file->read());
+	}
+
 	/**
 	 * @return string
 	 */
