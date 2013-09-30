@@ -127,19 +127,6 @@ class File extends FileStorage
 	}
 
 	/**
-	 * @return string
-	 * @throws IOException
-	 */
-	public function getHash()
-	{
-		if ($this->isCreated()) {
-			return md5_file($this->getPath());
-		} else {
-			throw new IOException("File {$this->getPath()} must be firstly created");
-		}
-	}
-
-	/**
 	 * @return bool
 	 * @throws IOException
 	 */
