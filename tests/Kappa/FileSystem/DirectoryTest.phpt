@@ -61,6 +61,28 @@ class DirectoryTest extends TestCase
 		Assert::false(is_dir($path));
 	}
 
+	public function testRename()
+	{
+		$path = $this->randomDirectory();
+		$dir = new Directory($path);
+		$renamed = $this->dataPath . DIRECTORY_SEPARATOR . 'renamed';
+		Assert::false(is_dir($renamed));
+		Assert::true($dir->rename('renamed'));
+		Assert::true(is_dir($renamed));
+		Assert::false(is_dir($path));
+		Assert::same(realpath($renamed), $dir->getPath());
+
+		Assert::throws(function () use ($dir) {
+			$dir->rename(array());
+		}, 'Kappa\FileSystem\InvalidArgumentException');
+		Assert::throws(function () use ($dir, $renamed) {
+			new Directory($renamed);
+			$dir->rename('renamed');
+		}, 'Kappa\FileSystem\DirectoryAlreadyExistException');
+
+		Assert::true(rmdir($renamed));
+	}
+
 	/**
 	 * @return string
 	 */
