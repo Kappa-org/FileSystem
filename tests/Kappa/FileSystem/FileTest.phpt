@@ -211,6 +211,14 @@ class FileTest extends TestCase
 		Assert::true(rmdir($dirMove));
 	}
 
+	public function testGetPath()
+	{
+		$path = $this->randomFile();
+		$file = new File($path);
+		Assert::same(realpath($path), $file->getPath());
+		Assert::true(unlink($path));
+	}
+
 	/**
 	 * @return string
 	 */
