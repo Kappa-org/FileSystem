@@ -14,7 +14,7 @@ namespace Kappa\FileSystem;
  * Class FileSystem
  * @package Kappa\FileSystem
  */
-class FileSystem
+class FileStorage
 {
 	const STRICT = 0;
 

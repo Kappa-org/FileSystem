@@ -14,7 +14,7 @@ namespace Kappa\FileSystem;
  * Class File
  * @package Kappa\FileSystem
  */
-class File extends FileSystem
+class File extends FileStorage
 {
 	/**
 	 * @param null $content
