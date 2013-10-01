@@ -1,4 +1,4 @@
-# Kappa\FileSystem [![Build Status](https://travis-ci.org/Kappa-org/FileSystem.png?branch=master)](https://travis-ci.org/Kappa-org/FileSystem)
+# Kappa\FileSystem [![Build Status](https://travis-ci.org/Kappa-app/FileSystem.png?branch=master)](https://travis-ci.org/Kappa-app/FileSystem)
 
 Easy system for work with files and directories
 
