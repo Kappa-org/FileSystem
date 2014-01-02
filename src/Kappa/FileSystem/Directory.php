@@ -226,7 +226,7 @@ class Directory extends FileStorage
 			}
 			if ($obj instanceof Directory) {
 				if (!in_array($obj->getInfo()->getBasename(), $ignore)) {
-					$newCopy = new Directory($copyDir . DIRECTORY_SEPARATOR . $obj->getBaseName());
+					$newCopy = new Directory($copyDir . DIRECTORY_SEPARATOR . $obj->getBaseName(), Directory::LOAD);
 					$this->doCopy($obj, $newCopy->getPath());
 				}
 			}
