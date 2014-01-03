@@ -155,6 +155,10 @@ class Directory extends FileStorage
 			if (file_exists($target) && !$overwrite) {
 				throw new DirectoryAlreadyExistException("Directory '{$this->getPath()}' already exist");
 			} else {
+				if (file_exists($target)) {
+					$deleteDir = new Directory($target);
+					$deleteDir->remove();
+				}
 				$dir = new Directory($target);
 				$this->doCopy($this, $dir->getPath(), $ignore);
 
