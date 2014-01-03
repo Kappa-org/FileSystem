@@ -30,28 +30,19 @@ class DirectoryTest extends TestCase
 		$this->dataPath = __DIR__ . '/../../data/';
 	}
 
-	public function testCreate()
+	public function testConstruct()
 	{
 		$path = $this->randomDirectory();
 		Assert::false(is_dir($path));
 		new Directory($path);
 		Assert::true(is_dir($path));
 		Assert::true(rmdir($path));
+		$dir = new Directory(__DIR__);
+		Assert::same(__DIR__, $dir->getPath());
 
 		Assert::throws(function () {
 			new Directory(array());
 		}, 'Kappa\FileSystem\InvalidArgumentException');
-		Assert::throws(function () {
-			new Directory(__DIR__, Directory::CREATE);
-		}, 'Kappa\FileSystem\DirectoryAlreadyExistException');
-	}
-
-	public function testLoad()
-	{
-		new Directory(__DIR__, Directory::LOAD);
-		Assert::throws(function () {
-			new Directory('dir', Directory::LOAD);
-		}, 'Kappa\FileSystem\DirectoryNotFoundException');
 	}
 
 	public function testRemove()
@@ -129,7 +120,7 @@ class DirectoryTest extends TestCase
 
 	public function testGetBaseName()
 	{
-		$dir = new Directory(__DIR__, Directory::LOAD);
+		$dir = new Directory(__DIR__);
 		Assert::same('FileSystem', $dir->getBaseName());
 	}
 

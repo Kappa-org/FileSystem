@@ -18,35 +18,22 @@ class File extends FileStorage
 {
 	/**
 	 * @param string $path
-	 * @param int $action
 	 * @throws FileNotFoundException
 	 * @throws InvalidArgumentException
 	 * @throws IOException
 	 * @throws FileAlreadyExistException
 	 */
-	public function __construct($path, $action = self::CREATE)
+	public function __construct($path)
 	{
 		if (!is_string($path)) {
 			throw new InvalidArgumentException("Path must be string, " . gettype($path) . " given");
 		}
-		if ($action === self::CREATE) {
-			if (!is_file($path)) {
-				if ($this->create($path)) {
-					$this->setPath($path);
-				} else {
-					throw new IOException("Unable to create file '{$path}'");
-				}
-			} else {
-				throw new FileAlreadyExistException("File '{$path}' already exist. You must use LOAD constant");
+		if (!is_file($path)) {
+			if (!$this->create($path)) {
+				throw new IOException("Unable to create file '{$path}'");
 			}
 		}
-		if ($action === self::LOAD) {
-			if (is_file($path) && is_writable($path) && is_readable($path)) {
-				$this->setPath($path);
-			} else {
-				throw new FileNotFoundException("File '{$path}' has not been found");
-			}
-		}
+		$this->setPath($path);
 	}
 
 	/**
@@ -188,7 +175,7 @@ class File extends FileStorage
 				throw new IOException("Unable to copy file to '{$target}', because file already exist");
 			} else {
 				if (@copy($this->getPath(), $target) === true) {
-					return ($returnNew) ? new File($target, File::LOAD) : true;
+					return ($returnNew) ? new File($target) : true;
 				} else {
 					return false;
 				}

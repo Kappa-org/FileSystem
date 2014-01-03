@@ -18,35 +18,22 @@ class Directory extends FileStorage
 {
 	/**
 	 * @param string $path
-	 * @param int $action
 	 * @throws InvalidArgumentException
 	 * @throws DirectoryNotFoundException
 	 * @throws IOException
 	 * @throws DirectoryAlreadyExistException
 	 */
-	public function __construct($path, $action = self::CREATE)
+	public function __construct($path)
 	{
 		if (!is_string($path)) {
 			throw new InvalidArgumentException("Path must be string, " . gettype($path) . " given");
 		}
-		if ($action === self::CREATE) {
-			if (!is_dir($path)) {
-				if ($this->create($path)) {
-					$this->setPath($path);
-				} else {
-					throw new IOException("Unable to create file '{$path}'");
-				}
-			} else {
-				throw new DirectoryAlreadyExistException("File '{$path}' already exist. You must use LOAD constant");
+		if (!is_dir($path)) {
+			if (!$this->create($path)) {
+				throw new IOException("Unable to create directory '{$path}'");
 			}
 		}
-		if ($action === self::LOAD) {
-			if (is_dir($path) && is_writable($path) && is_readable($path)) {
-				$this->setPath($path);
-			} else {
-				throw new DirectoryNotFoundException("File '{$path}' has not been found");
-			}
-		}
+		$this->setPath($path);
 	}
 
 	/**
@@ -104,10 +91,10 @@ class Directory extends FileStorage
 			/** @var \SplFileInfo $file */
 			foreach ($it as $path => $file) {
 				if ($file->isFile()) {
-					$output[$path] = new File($file->getPathname(), File::LOAD);
+					$output[$path] = new File($file->getPathname());
 				}
 				if ($file->isDir()) {
-					$output[$path] = new Directory($file->getPathname(), Directory::LOAD);
+					$output[$path] = new Directory($file->getPathname());
 				}
 			}
 
@@ -171,7 +158,7 @@ class Directory extends FileStorage
 				$dir = new Directory($target);
 				$this->doCopy($this, $dir->getPath(), $ignore);
 
-				return ($returnNew) ? new Directory($dir->getPath(), Directory::LOAD) : true;
+				return ($returnNew) ? new Directory($dir->getPath()) : true;
 			}
 		} else {
 			throw new IOException("Directory {$this->getPath()} must be firstly created");
@@ -226,7 +213,7 @@ class Directory extends FileStorage
 			}
 			if ($obj instanceof Directory) {
 				if (!in_array($obj->getInfo()->getBasename(), $ignore)) {
-					$newCopy = new Directory($copyDir . DIRECTORY_SEPARATOR . $obj->getBaseName(), Directory::LOAD);
+					$newCopy = new Directory($copyDir . DIRECTORY_SEPARATOR . $obj->getBaseName());
 					$this->doCopy($obj, $newCopy->getPath());
 				}
 			}

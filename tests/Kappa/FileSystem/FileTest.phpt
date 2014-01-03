@@ -33,33 +33,17 @@ class FileTest extends TestCase
 		$this->dataPath = __DIR__ . '/../../data/';
 	}
 
-	public function testCreate()
+	public function testConstruct()
 	{
 		$path = $this->randomFile();
 		Assert::false(is_file($path));
-		new File($path, File::CREATE);
+		new File($path);
 		Assert::true(is_file($path));
 		Assert::true(unlink($path));
 
 		Assert::throws(function () {
 			new File(array());
 		}, 'Kappa\FileSystem\InvalidArgumentException');
-		Assert::throws(function () {
-			new File(__FILE__, File::CREATE);
-		}, 'Kappa\FileSystem\FileAlreadyExistException');
-	}
-
-	public function testLoad()
-	{
-		$path = __FILE__;
-		Assert::true(is_file($path));
-		new File($path, File::LOAD);
-		Assert::throws(function () {
-			new File(array());
-		}, 'Kappa\FileSystem\InvalidArgumentException');
-		Assert::throws(function () {
-			new File('file.txt', File::LOAD);
-		}, 'Kappa\FileSystem\FileNotFoundException');
 	}
 
 	public function testGetBaseName()
@@ -178,7 +162,7 @@ class FileTest extends TestCase
 		Assert::throws(function () use ($file, $copyPath) {
 			new File($copyPath);
 			$file->copy($copyPath);
-		}, 'Kappa\FileSystem\FileAlreadyExistException');
+		}, 'Kappa\FileSystem\IOException');
 
 		Assert::true(unlink($path));
 		Assert::true(unlink($copyPath));
@@ -204,7 +188,7 @@ class FileTest extends TestCase
 		Assert::throws(function () use ($file, $movePath) {
 			new File($movePath);
 			$file->move($movePath);
-		}, 'Kappa\FileSystem\FileAlreadyExistException');
+		}, 'Kappa\FileSystem\IOException');
 
 		Assert::true(unlink($movePath));
 		Assert::true(rmdir($dirMove));
