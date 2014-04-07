@@ -46,6 +46,13 @@ class FileTest extends TestCase
 		Assert::same('Hello world!', file_get_contents($createFileWithContent));
 		unlink($createFileWithContent);
 		unlink($createFile);
+
+		Assert::throws(function () {
+			File::create(__FILE__);
+		}, 'Kappa\FileSystem\FileAlreadyExistException');
+		Assert::throws(function () {
+			File::open('noFile');
+		}, 'Kappa\FileSystem\FileNotFoundException');
 	}
 
 	public function testOpen()
