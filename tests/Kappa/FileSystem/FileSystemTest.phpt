@@ -46,6 +46,29 @@ class FileSystemTest extends TestCase
 		Assert::false(is_file($filePath));
 		Assert::false(is_dir($directoryPath));
 	}
+
+	public function testRename()
+	{
+		$filePath = $this->dataPath . '/fileRename';
+		$directoryPath = $this->dataPath . '/directoryRename';
+		$newFile = 'fileNewName';
+		$newDirectory = 'directoryNewName';
+		$file = File::create($filePath);
+		$directory = Directory::create($directoryPath);
+		Assert::true(is_file($filePath));
+		Assert::true(is_dir($directoryPath));
+		Assert::false(is_file($this->dataPath . DIRECTORY_SEPARATOR . $newFile));
+		Assert::false(is_dir($this->dataPath . DIRECTORY_SEPARATOR . $newDirectory));
+		Assert::type('Kappa\FileSystem\File', FileSystem::rename($file, $newFile));
+		Assert::type('Kappa\FileSystem\Directory', FileSystem::rename($directory, $newDirectory));
+		Assert::true(is_file($this->dataPath . DIRECTORY_SEPARATOR . $newFile));
+		Assert::true(is_dir($this->dataPath . DIRECTORY_SEPARATOR . $newDirectory));
+		Assert::false(is_file($filePath));
+		Assert::false(is_dir($directoryPath));
+
+		unlink($this->dataPath . DIRECTORY_SEPARATOR . $newFile);
+		rmdir($this->dataPath . DIRECTORY_SEPARATOR . $newDirectory);
+	}
 }
 
 \run(new FileSystemTest());

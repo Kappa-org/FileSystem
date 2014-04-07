@@ -27,4 +27,25 @@ class FileSystem
 		}
 		\Nette\Utils\FileSystem::delete($object->getInfo()->getPathname());
 	}
+
+	/**
+	 * @param File|Directory $object
+	 * @param string $newName
+	 * @param bool $overwrite
+	 * @return Directory|File
+	 * @throws InvalidArgumentException
+	 */
+	public static function rename($object, $newName, $overwrite = false)
+	{
+		if (!$object instanceof File && !$object instanceof Directory) {
+			throw new InvalidArgumentException(__METHOD__ . ": Argument must be instance of File or Directory");
+		}
+		$newName = $object->getInfo()->getPath() . DIRECTORY_SEPARATOR . $newName;
+		\Nette\Utils\FileSystem::rename($object->getInfo()->getPathname(), $newName, $overwrite);
+		if ($object instanceof File) {
+			return File::open($newName);
+		} else {
+			return Directory::open($newName);
+		}
+	}
 } 
