@@ -1,11 +1,11 @@
 <?php
 /**
- * bootstrap.php
+ * This file is part of the Kappa\Tester package.
  *
- * @author Ondřej Záruba <zarubaondra@gmail.com>
- * @date 30.1.13
+ * (c) Ondřej Záruba <zarubaondra@gmail.com>
  *
- * @package Kappa
+ * For the full copyright and license information, please view the license.md
+ * file that was distributed with this source code.
  */
 
 if (@!include __DIR__ . '/../../vendor/autoload.php') {
@@ -14,7 +14,7 @@ if (@!include __DIR__ . '/../../vendor/autoload.php') {
 }
 
 // configure environment
-Tester\Helpers::setup();
+Tester\Environment::setup();
 class_alias('Tester\Assert', 'Assert');
 date_default_timezone_set('Europe/Prague');
 
