@@ -14,7 +14,16 @@ namespace Kappa\FileSystem;
  * Class FileNotFoundException
  * @package Kappa\FileSystem
  */
-class FileNotFoundException extends \LogicException
+class FileNotFoundException extends IOException
+{
+
+}
+
+/**
+ * Class IOException
+ * @package Kappa\FileSystem
+ */
+class IOException extends \LogicException
 {
 
 }
