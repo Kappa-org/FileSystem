@@ -44,8 +44,8 @@ $dorectory = Directory::open('path/to/file'); // Open directory
 
 * ```getInfo()``` - Returns SplFileInfo
 * ```getDirectories()``` - Returns directories in directory as array ```path => SplFileInfo```
-* ```getFiles()``` - Returns files in directory as array ```path => SplFileInfo``
-* ```getContent()``` - Returns directories and files in directory as array ```path => SplFileInfo``
+* ```getFiles()``` - Returns files in directory as array ```path => SplFileInfo```
+* ```getContent()``` - Returns directories and files in directory as array ```path => SplFileInfo```
 
 ### FileSystem API:
 
