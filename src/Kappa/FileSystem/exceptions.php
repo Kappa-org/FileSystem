@@ -54,3 +54,12 @@ class IOException extends \LogicException
 {
 
 }
+
+/**
+ * Class InvalidArgumentException
+ * @package Kappa\FileSystem
+ */
+class InvalidArgumentException extends \LogicException
+{
+
+}
