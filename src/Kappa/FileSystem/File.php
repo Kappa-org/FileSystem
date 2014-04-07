@@ -91,4 +91,17 @@ class File
 	{
 		return $this->overwrite(null);
 	}
+
+	/**
+	 * @param string $content
+	 * @param bool $newLine
+	 * @return bool
+	 */
+	public function append($content, $newLine = true)
+	{
+		if ($newLine) {
+			$content = PHP_EOL . $content;
+		}
+		return (file_put_contents($this->path, $content, FILE_APPEND) === false) ? : true;
+	}
 }

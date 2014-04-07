@@ -99,6 +99,19 @@ class FileTest extends TestCase
 
 		unlink($path);
 	}
+
+	public function testAppend()
+	{
+		$path = $this->dataPath . '/file';
+		$file = File::create($path, 'Hello');
+		Assert::same('Hello', $file->read());
+		Assert::true($file->append(' world', false));
+		Assert::same('Hello world', $file->read());
+		Assert::true($file->append('Hello guys!'));
+		Assert::same('Hello world' . PHP_EOL . 'Hello guys!', $file->read());
+
+		unlink($path);
+	}
 }
 
 \run(new FileTest());
