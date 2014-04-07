@@ -5,6 +5,7 @@
 	"homepage": "https://github.com/Kappa-org/FileSystem",
 	"license": ["BSD-3-Clause"],
 	"type": "library",
+	"minimum-stability": "dev",
 	"authors": [
 		{
 			"name": "Ondřej Záruba",
@@ -16,7 +17,8 @@
 		"issues": "https://github.com/Kappa-org/FileSystem/issues"
 	},
 	"require": {
-		"php": ">= 5.3.3"
+		"php": ">= 5.3.3",
+		"kappa/utils": "@dev"
 	},
 	"require-dev": {
 		"kappa/tester": "1.1.*",
