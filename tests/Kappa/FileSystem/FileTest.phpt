@@ -88,6 +88,17 @@ class FileTest extends TestCase
 
 		unlink($path);
 	}
+
+	public function testClear()
+	{
+		$path = $this->dataPath . '/file';
+		$file = File::create($path, 'Hello');
+		Assert::same('Hello', $file->read());
+		Assert::true($file->clear());
+		Assert::same('', $file->read());
+
+		unlink($path);
+	}
 }
 
 \run(new FileTest());

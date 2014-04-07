@@ -83,4 +83,12 @@ class File
 	{
 		return file_put_contents($this->path, $content) === false ? : true;
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function clear()
+	{
+		return $this->overwrite(null);
+	}
 }
