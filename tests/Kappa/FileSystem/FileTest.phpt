@@ -61,6 +61,13 @@ class FileTest extends TestCase
 		Assert::type('Kappa\FileSystem\SplFileInfo', $file->getInfo());
 		Assert::same(__FILE__, $file->getInfo()->getPathname());
 	}
+
+	public function testRead()
+	{
+		$path = $this->dataPath . '/openFile';
+		$file = File::open($path);
+		Assert::same(file_get_contents($path), $file->read());
+	}
 }
 
 \run(new FileTest());

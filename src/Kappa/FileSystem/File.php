@@ -66,4 +66,12 @@ class File
 	{
 		return new SplFileInfo($this->path);
 	}
+
+	/**
+	 * @return string
+	 */
+	public function read()
+	{
+		return file_get_contents($this->path);
+	}
 } 
