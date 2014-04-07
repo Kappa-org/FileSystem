@@ -74,4 +74,13 @@ class File
 	{
 		return file_get_contents($this->path);
 	}
-} 
+
+	/**
+	 * @param string|null $content
+	 * @return bool
+	 */
+	public function overwrite($content = null)
+	{
+		return file_put_contents($this->path, $content) === false ? : true;
+	}
+}

@@ -75,6 +75,19 @@ class FileTest extends TestCase
 		$file = File::open($path);
 		Assert::same(file_get_contents($path), $file->read());
 	}
+
+	public function testOverwrite()
+	{
+		$path = $this->dataPath . '/file';
+		$file = File::create($path, 'Hello');
+		Assert::same('Hello', $file->read());
+		Assert::true($file->overwrite('Test'));
+		Assert::same('Test', $file->read());
+		Assert::true($file->overwrite());
+		Assert::same('', $file->read());
+
+		unlink($path);
+	}
 }
 
 \run(new FileTest());
