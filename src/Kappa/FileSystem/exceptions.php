@@ -25,7 +25,7 @@ class FileNotFoundException extends IOException
  */
 class FileAlreadyExistException extends IOException
 {
-	
+
 }
 
 /**

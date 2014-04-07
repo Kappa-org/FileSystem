@@ -50,8 +50,16 @@ class FileTest extends TestCase
 
 	public function testOpen()
 	{
-		$openFile = $this->dataPath . '/openFile';
-		Assert::type('Kappa\FileSystem\File', File::open($openFile));
+		$openFile = File::open($this->dataPath . '/openFile');
+		Assert::type('Kappa\FileSystem\File', $openFile);
+		Assert::same('Hello world!', file_get_contents($openFile->getInfo()->getPathname()));
+	}
+
+	public function testGetInfo()
+	{
+		$file = File::open(__FILE__);
+		Assert::type('Kappa\FileSystem\SplFileInfo', $file->getInfo());
+		Assert::same(__FILE__, $file->getInfo()->getPathname());
 	}
 }
 
