@@ -35,7 +35,7 @@ class FileSystem
 	 * @return Directory|File
 	 * @throws InvalidArgumentException
 	 */
-	public static function rename($object, $newName, $overwrite = false)
+	public static function rename($object, $newName, $overwrite = true)
 	{
 		if (!$object instanceof File && !$object instanceof Directory) {
 			throw new InvalidArgumentException(__METHOD__ . ": Argument must be instance of File or Directory");
