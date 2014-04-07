@@ -94,4 +94,12 @@ class Directory
 
 		return $result;
 	}
+
+	/**
+	 * @return array
+	 */
+	public function getContent()
+	{
+		return array_merge($this->getDirectories(), $this->getFiles());
+	}
 } 
