@@ -3,7 +3,7 @@
 	"description": "Easy system for work with files and directories",
 	"keywords": ["Nette", "Kappa", "file system", "files", "directories"],
 	"homepage": "https://github.com/Kappa-app/FileSystem",
-	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+	"license": ["BSD-3-Clause"],
 	"type": "library",
 	"authors": [
 		{
