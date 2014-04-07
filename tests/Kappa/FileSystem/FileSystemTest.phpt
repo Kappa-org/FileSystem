@@ -113,6 +113,42 @@ class FileSystemTest extends TestCase
 		FileSystem::remove($directory2);
 		FileSystem::remove($directory3);
 	}
+
+	public function testMove()
+	{
+		$filePath = $this->dataPath . '/fileMove';
+		$directoryPath = $this->dataPath . '/directoryMove';
+		$newFile = $this->dataPath . '/fileAfterMove';
+		$newDirectory = $this->dataPath . '/directoryAfterMove';
+		$file = File::create($filePath);
+		$file3 = File::create($filePath . '2');
+		$directory = Directory::create($directoryPath);
+		Assert::true(is_file($filePath));
+		Assert::true(is_dir($directoryPath));
+		Assert::false(is_file($newFile));
+		Assert::false(is_dir($newDirectory));
+		$file2 = FileSystem::move($file, $newFile);
+		$directory2 = FileSystem::move($file3, $directory);
+		$directory3 = FileSystem::move($directory, $newDirectory);
+		Assert::type('Kappa\FileSystem\File', $file2);
+		Assert::type('Kappa\FileSystem\File', $directory2);
+		Assert::type('Kappa\FileSystem\Directory', $directory3);
+		Assert::true(is_file($newFile));
+		Assert::true(is_dir($newDirectory));
+		Assert::false(is_file($filePath));
+		Assert::false(is_dir($directoryPath));
+
+		Assert::throws(function() use($directory) {
+			FileSystem::move($directory, $directory);
+		}, 'Kappa\FileSystem\InvalidArgumentException');
+		Assert::throws(function() use($directory) {
+			FileSystem::move(array(), array());
+		}, 'Kappa\FileSystem\InvalidArgumentException');
+
+		FileSystem::remove($file2);
+		FileSystem::remove($directory2);
+		FileSystem::remove($directory3);
+	}
 }
 
 \run(new FileSystemTest());

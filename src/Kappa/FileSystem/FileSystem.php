@@ -77,4 +77,18 @@ class FileSystem
 			return Directory::open($target);
 		}
 	}
+
+	/**
+	 * @param File|Directory $source
+	 * @param string|Directory $target
+	 * @param bool $overwrite
+	 * @return Directory|File
+	 */
+	public static function move($source, $target, $overwrite = true)
+	{
+		$result = self::copy($source, $target, $overwrite);
+		FileSystem::remove($source);
+
+		return $result;
+	}
 } 
