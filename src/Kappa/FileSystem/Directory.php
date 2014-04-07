@@ -40,4 +40,12 @@ class Directory
 
 		return new self($path);
 	}
+
+	/**
+	 * @return SplFileInfo
+	 */
+	public function getInfo()
+	{
+		return new SplFileInfo($this->path);
+	}
 } 

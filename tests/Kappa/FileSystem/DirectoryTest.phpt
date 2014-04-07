@@ -29,6 +29,13 @@ class DirectoryTest extends TestCase
 		$directory = Directory::open(__DIR__);
 		Assert::type('Kappa\FileSystem\Directory', $directory);
 	}
+
+	public function testGetInfo()
+	{
+		$directory = Directory::open(__DIR__);
+		Assert::type('Kappa\FileSystem\SplFileInfo', $directory->getInfo());
+		Assert::same(__DIR__, $directory->getInfo()->getPathname());
+	}
 }
 
 \run(new DirectoryTest());
