@@ -19,7 +19,7 @@
 		"php": ">= 5.4.0"
 	},
 	"require-dev": {
-		"kappa/tester": "1.0.*",
+		"kappa/tester": "1.1.*",
 		"nette/nette": "2.0.*"
 	},
 	"suggest": {
