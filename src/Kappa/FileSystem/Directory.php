@@ -81,4 +81,17 @@ class Directory
 
 		return $result;
 	}
+
+	/**
+	 * @return array
+	 */
+	public function getFiles()
+	{
+		$result = array();
+		foreach (Finder::findFiles('*')->in($this->path) as $path => $file) {
+			$result[$path] = new SplFileInfo($path);
+		}
+
+		return $result;
+	}
 } 

@@ -69,6 +69,16 @@ class DirectoryTest extends TestCase
 		$directory = Directory::open($this->dataPath);
 		Assert::equal(array(realpath($this->dataPath . '/files') => new SplFileInfo($this->dataPath . '/files')), $directory->getDirectories());
 	}
+
+	public function testGetFiles()
+	{
+		$expected = array(
+			realpath($this->dataPath . '/files/openFile') => new SplFileInfo($this->dataPath . '/files/openFile'),
+			realpath($this->dataPath . '/files/image.png') => new SplFileInfo($this->dataPath . '/files/image.png'),
+		);
+		$directory = Directory::open($this->dataPath . '/files');
+		Assert::equal($expected, $directory->getFiles());
+	}
 }
 
 \run(new DirectoryTest());
