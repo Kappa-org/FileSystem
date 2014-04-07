@@ -69,6 +69,39 @@ class FileSystemTest extends TestCase
 		unlink($this->dataPath . DIRECTORY_SEPARATOR . $newFile);
 		rmdir($this->dataPath . DIRECTORY_SEPARATOR . $newDirectory);
 	}
+
+	public function testCopy()
+	{
+		$filePath = $this->dataPath . '/fileCopy';
+		$directoryPath = $this->dataPath . '/directoryCopy';
+		$newFile = $this->dataPath . '/fileAfterCopy';
+		$newDirectory = $this->dataPath . '/directoryAfterCopy';
+		$file = File::create($filePath);
+		$directory = Directory::create($directoryPath);
+		Assert::true(is_file($filePath));
+		Assert::true(is_dir($directoryPath));
+		Assert::false(is_file($newFile));
+		Assert::false(is_dir($newDirectory));
+		$file2 = FileSystem::copy($file, $newFile);
+		$directory2 = FileSystem::copy($file, $directory);
+		$directory3 = FileSystem::copy($directory, $newDirectory);
+		Assert::type('Kappa\FileSystem\File', $file2);
+		Assert::type('Kappa\FileSystem\File', $directory2);
+		Assert::type('Kappa\FileSystem\Directory', $directory3);
+		Assert::true(is_file($newFile));
+		Assert::true(is_dir($newDirectory));
+		Assert::true(is_file($directoryPath . '/fileCopy'));
+
+		Assert::throws(function() use($directory) {
+			FileSystem::copy($directory, $directory);
+		}, 'Kappa\FileSystem\InvalidArgumentException');
+
+		FileSystem::remove($file);
+		FileSystem::remove($file2);
+		FileSystem::remove($directory);
+		FileSystem::remove($directory2);
+		FileSystem::remove($directory3);
+	}
 }
 
 \run(new FileSystemTest());

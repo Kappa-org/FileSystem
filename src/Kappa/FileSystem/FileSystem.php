@@ -48,4 +48,33 @@ class FileSystem
 			return Directory::open($newName);
 		}
 	}
+
+	/**
+	 * @param File|Directory $source
+	 * @param string|Directory $target
+	 * @param bool $overwrite
+	 * @return Directory|File
+	 * @throws InvalidArgumentException
+	 */
+	public static function copy($source, $target, $overwrite = true)
+	{
+		if (!$source instanceof File && !$source instanceof Directory) {
+			throw new InvalidArgumentException(__METHOD__ . ": Argument must be instance of File or Directory");
+		}
+		if (!is_string($target) && !$target instanceof Directory) {
+			throw new InvalidArgumentException(__METHOD__ . ": Target must be string or instance of Directory");
+		}
+		if ($source === $target) {
+			throw new InvalidArgumentException(__METHOD__ . ": Target must not be same as source");
+		}
+		if ($target instanceof Directory) {
+			$target = $target->getInfo()->getPathname() . DIRECTORY_SEPARATOR . $source->getInfo()->getBasename();
+		}
+		\Nette\Utils\FileSystem::copy($source->getInfo()->getPathname(), $target, $overwrite);
+		if ($source instanceof File) {
+			return File::open($target);
+		} else {
+			return Directory::open($target);
+		}
+	}
 } 
