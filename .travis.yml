@@ -1,12 +1,13 @@
 language: php
 
 php:
-        - "5.4"
-        - "5.5"
+    - "5.3.3"
+    - "5.4"
+    - "5.5"
+    - "5.6"
 
-script: "VERBOSE=true ./vendor/bin/tester -s -c tests/php.ini-unix -j 29 tests/"
+script: "./vendor/bin/tester tests/ -c tests/php-unix.ini"
 
 before_script:
-        - composer self-update
-        - composer install --dev
-        - sudo chmod 777 -R ./
+    - composer self-update
+    - composer install --dev --prefer-source
