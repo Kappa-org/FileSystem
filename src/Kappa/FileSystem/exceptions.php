@@ -29,6 +29,24 @@ class FileAlreadyExistException extends IOException
 }
 
 /**
+ * Class DirectoryNotFoundException
+ * @package Kappa\FileSystem
+ */
+class DirectoryNotFoundException extends IOException
+{
+
+}
+
+/**
+ * Class DirectoryAlreadyExistException
+ * @package Kappa\FileSystem
+ */
+class DirectoryAlreadyExistException extends IOException
+{
+
+}
+
+/**
  * Class IOException
  * @package Kappa\FileSystem
  */
