@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the filesystem package.
+ * This file is part of the Kappa\FileSystem package.
  *
  * (c) Ondřej Záruba <zarubaondra@gmail.com>
  *
@@ -10,7 +10,7 @@
  * @testCase
  */
 
-namespace filesystem\Tests;
+namespace Kappa\FileSystem\Tests;
 
 use Kappa\FileSystem\File;
 use Kappa\Tester\TestCase;
