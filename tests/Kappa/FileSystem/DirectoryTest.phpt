@@ -40,12 +40,20 @@ class DirectoryTest extends TestCase
 		Assert::true(is_dir($path));
 
 		rmdir($path);
+
+		Assert::throws(function () {
+			Directory::create(__DIR__);
+		}, 'Kappa\FileSystem\DirectoryAlreadyExistException');
 	}
 
 	public function testOpen()
 	{
 		$directory = Directory::open(__DIR__);
 		Assert::type('Kappa\FileSystem\Directory', $directory);
+
+		Assert::throws(function () {
+			Directory::open('noDirectory');
+		}, 'Kappa\FileSystem\DirectoryNotFoundException');
 	}
 
 	public function testGetInfo()
