@@ -16,7 +16,7 @@
 		"issues": "https://github.com/Kappa-org/FileSystem/issues"
 	},
 	"require": {
-		"php": ">= 5.4.0"
+		"php": ">= 5.3.3"
 	},
 	"require-dev": {
 		"kappa/tester": "1.1.*",
