@@ -35,6 +35,9 @@ class File
 	 */
 	public static function create($path, $content = null)
 	{
+		if (is_file($path)) {
+			throw new FileAlreadyExistException("File '{$path}' has not been created because already exist");
+		}
 		if (@file_put_contents($path, $content) === false) {
 			throw new IOException("File '{$path}' has not been created");
 		}
