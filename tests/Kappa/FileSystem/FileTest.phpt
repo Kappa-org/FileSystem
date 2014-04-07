@@ -12,8 +12,10 @@
 
 namespace Kappa\FileSystem\Tests;
 
+use Kappa\FileSystem\Directory;
 use Kappa\FileSystem\File;
 use Kappa\Tester\TestCase;
+use Nette\Http\FileUpload;
 use Tester\Assert;
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -60,6 +62,44 @@ class FileTest extends TestCase
 		$openFile = File::open($this->dataPath . '/openFile');
 		Assert::type('Kappa\FileSystem\File', $openFile);
 		Assert::same('Hello world!', file_get_contents($openFile->getInfo()->getPathname()));
+	}
+
+	public function testUpload()
+	{
+		$originalFile = $this->dataPath . '/uploadFile';
+		$afterUpload = $this->dataPath . '/afterUpload';
+		$uploaded = $this->dataPath . '/uploaded';
+		$uploaded2 = $this->dataPath . '/uploaded2';
+		copy($originalFile, $uploaded);
+		copy($originalFile, $uploaded2);
+		$fileUpload = new FileUpload(array(
+			'name' => 'uploadFile',
+			'type' => 'text/plain',
+			'tmp_name' => $uploaded,
+			'error' => 0,
+			'size' => 100
+		));
+		$fileUpload2 = new FileUpload(array(
+			'name' => 'uploadFile',
+			'type' => 'text/plain',
+			'tmp_name' => $uploaded2,
+			'error' => 0,
+			'size' => 100
+		));
+		$directory = Directory::open($this->dataPath . '/directory');
+		Assert::false(is_file($afterUpload));
+		Assert::false(is_file($directory->getInfo()->getPathname() . '/uploadFile'));
+		$file = File::upload($fileUpload, $afterUpload);
+		$file2 = File::upload($fileUpload2, $directory);
+		Assert::type('Kappa\FileSystem\File', $file);
+		Assert::type('Kappa\FileSystem\File', $file2);
+		Assert::true(is_file($afterUpload));
+		Assert::true(is_file($directory->getInfo()->getPathname() . '/uploadFile'));
+		Assert::same('Content', $file->read());
+		Assert::same('Content', $file2->read());
+
+		unlink($afterUpload);
+		unlink($directory->getInfo()->getPathname() . '/uploadFile');
 	}
 
 	public function testGetInfo()

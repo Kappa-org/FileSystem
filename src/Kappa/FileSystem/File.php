@@ -10,6 +10,8 @@
 
 namespace Kappa\FileSystem;
 
+use Nette\Http\FileUpload;
+
 /**
  * Class File
  * @package Kappa\FileSystem
@@ -57,6 +59,33 @@ class File
 		}
 
 		return new self($path);
+	}
+
+	/**
+	 * @param FileUpload $fileUpload
+	 * @param string|Directory $target
+	 * @return File
+	 * @throws InvalidArgumentException
+	 * @throws IOException
+	 * @throws FileAlreadyExistException
+	 */
+	public static function upload(FileUpload $fileUpload, $target)
+	{
+		if (!is_string($target) && !$target instanceof Directory) {
+			throw new InvalidArgumentException(__METHOD__ . ": Target must be string or instance of Direcotry");
+		}
+		if ($target instanceof Directory) {
+			$target = $target->getInfo()->getPathname() . DIRECTORY_SEPARATOR . $fileUpload->getSanitizedName();
+		}
+		if (is_file($target)) {
+			throw new FileAlreadyExistException("File '{$target}' already exist");
+		}
+		if (!$fileUpload->isOk()) {
+			throw new IOException("File '{$fileUpload->getName()}' has not been saved");
+		}
+		$fileUpload->move($target);
+
+		return new self($target);
 	}
 
 	/**

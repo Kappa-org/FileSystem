@@ -32,6 +32,12 @@ $file = File::open('path/to/file'); // Open file
 $dorectory = Directory::open('path/to/file'); // Open directory
 ```
 
+Upload files via [FileUpload](https://github.com/nette/http/blob/master/src/Http/FileUpload.php):
+```php
+// $fileUpload is instance of FileUpload from forms example...
+$file = File::upload($fileUpload, 'path/to/save/file');
+```
+
 ### File API:
 
 * ```read()``` - Returns file content

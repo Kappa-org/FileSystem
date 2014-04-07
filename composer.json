@@ -26,7 +26,7 @@
 		"nette/http": "2.2.*"
 	},
 	"suggest": {
-		"nette/http": "For using FileUpload"
+		"nette/http": "For using FileUpload as File::upload"
 	},
 	"autoload": {
 		"psr-0": {
