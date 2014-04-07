@@ -24,6 +24,24 @@ require_once __DIR__ . '/../bootstrap.php';
  */
 class DirectoryTest extends TestCase
 {
+	/** @var string */
+	private $dataPath;
+
+	protected function setUp()
+	{
+		$this->dataPath = __DIR__ . '/../../data';
+	}
+
+	public function testCreate()
+	{
+		$path = $this->dataPath . '/directory';
+		Assert::false(is_dir($path));
+		$directory = Directory::create($path);
+		Assert::true(is_dir($path));
+
+		rmdir($path);
+	}
+
 	public function testOpen()
 	{
 		$directory = Directory::open(__DIR__);

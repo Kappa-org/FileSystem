@@ -30,6 +30,24 @@ class Directory
 	/**
 	 * @param string $path
 	 * @return Directory
+	 * @throws IOException
+	 * @throws DirectoryAlreadyExistException
+	 */
+	public static function create($path)
+	{
+		if (is_dir($path)) {
+			throw new DirectoryAlreadyExistException("Directory '{$path}' already exist");
+		}
+		if (!@mkdir($path)) {
+			throw new IOException("Directory '{$path}' has not been created");
+		}
+
+		return new self($path);
+	}
+
+	/**
+	 * @param string $path
+	 * @return Directory
 	 * @throws DirectoryNotFoundException
 	 */
 	public static function open($path)
