@@ -55,3 +55,11 @@ Directory and return new instance of object
 * ```copy(source, target, overwrite)``` - Copy source to target, ```source``` must be instance of File or Directory,
 ```target``` can be string or instance of Directory. Return instance of copy file;
 * ```move(source, target, overwrite)``` - Same as ```copy()``` but remove source after copy
+
+### Examples:
+
+```php
+$file = File::create('file.txt');
+$file = FileSystem::rename($file, 'superFile.txt');
+$file->getInfo()->getBasename(); // Return superFile.txt
+```
