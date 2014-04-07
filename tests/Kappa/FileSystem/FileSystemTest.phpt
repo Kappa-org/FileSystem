@@ -45,6 +45,10 @@ class FileSystemTest extends TestCase
 		FileSystem::remove($directory);
 		Assert::false(is_file($filePath));
 		Assert::false(is_dir($directoryPath));
+
+		Assert::throws(function() use($directory) {
+			FileSystem::remove(array());
+		}, 'Kappa\FileSystem\InvalidArgumentException');
 	}
 
 	public function testRename()
@@ -68,6 +72,10 @@ class FileSystemTest extends TestCase
 
 		unlink($this->dataPath . DIRECTORY_SEPARATOR . $newFile);
 		rmdir($this->dataPath . DIRECTORY_SEPARATOR . $newDirectory);
+
+		Assert::throws(function() use($directory) {
+			FileSystem::rename(array(), array());
+		}, 'Kappa\FileSystem\InvalidArgumentException');
 	}
 
 	public function testCopy()
@@ -94,6 +102,9 @@ class FileSystemTest extends TestCase
 
 		Assert::throws(function() use($directory) {
 			FileSystem::copy($directory, $directory);
+		}, 'Kappa\FileSystem\InvalidArgumentException');
+		Assert::throws(function() use($directory) {
+			FileSystem::copy(array(), array());
 		}, 'Kappa\FileSystem\InvalidArgumentException');
 
 		FileSystem::remove($file);
