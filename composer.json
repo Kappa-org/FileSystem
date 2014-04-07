@@ -19,15 +19,14 @@
 	"require": {
 		"php": ">= 5.3.3",
 		"kappa/utils": "@dev",
-		"nette/finder": "2.2.*",
-		"nette/http": "2.2.*"
+		"nette/finder": "2.2.*"
 	},
 	"require-dev": {
 		"kappa/tester": "1.1.*",
-		"nette/nette": "2.0.*"
+		"nette/http": "2.2.*"
 	},
 	"suggest": {
-		"nette/nette": "For work with FileUpload and Image classes"
+		"nette/http": "For using FileUpload"
 	},
 	"autoload": {
 		"psr-0": {
