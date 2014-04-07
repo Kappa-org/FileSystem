@@ -10,6 +10,8 @@
 
 namespace Kappa\FileSystem;
 
+use Nette\Utils\Finder;
+
 /**
  * Class Directory
  * @package Kappa\FileSystem
@@ -65,5 +67,18 @@ class Directory
 	public function getInfo()
 	{
 		return new SplFileInfo($this->path);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getDirectories()
+	{
+		$result = array();
+		foreach (Finder::findDirectories('*')->in($this->path) as $path => $file) {
+			$result[$path] = new SplFileInfo($path);
+		}
+
+		return $result;
 	}
 } 

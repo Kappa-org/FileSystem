@@ -13,6 +13,7 @@
 namespace Kappa\FileSystem\Tests;
 
 use Kappa\FileSystem\Directory;
+use Kappa\FileSystem\SplFileInfo;
 use Kappa\Tester\TestCase;
 use Tester\Assert;
 
@@ -61,6 +62,12 @@ class DirectoryTest extends TestCase
 		$directory = Directory::open(__DIR__);
 		Assert::type('Kappa\FileSystem\SplFileInfo', $directory->getInfo());
 		Assert::same(__DIR__, $directory->getInfo()->getPathname());
+	}
+
+	public function testGetDirectory()
+	{
+		$directory = Directory::open($this->dataPath);
+		Assert::equal(array(realpath($this->dataPath . '/files') => new SplFileInfo($this->dataPath . '/files')), $directory->getDirectories());
 	}
 }
 
