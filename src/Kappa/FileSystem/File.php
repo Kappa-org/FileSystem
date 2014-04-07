@@ -44,4 +44,18 @@ class File
 
 		return new self($path);
 	}
+
+	/**
+	 * @param string $path
+	 * @return File
+	 * @throws FileNotFoundException
+	 */
+	public static function open($path)
+	{
+		if (!is_file($path)) {
+			throw new FileNotFoundException("File '{$path}' has not been found");
+		}
+
+		return new self($path);
+	}
 } 

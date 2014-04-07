@@ -47,6 +47,12 @@ class FileTest extends TestCase
 		unlink($createFileWithContent);
 		unlink($createFile);
 	}
+
+	public function testOpen()
+	{
+		$openFile = $this->dataPath . '/openFile';
+		Assert::type('Kappa\FileSystem\File', File::open($openFile));
+	}
 }
 
 \run(new FileTest());
