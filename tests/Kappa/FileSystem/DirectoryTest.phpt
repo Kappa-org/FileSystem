@@ -35,7 +35,7 @@ class DirectoryTest extends TestCase
 
 	public function testCreate()
 	{
-		$path = $this->dataPath . '/directory';
+		$path = $this->dataPath . '/directoryCreate';
 		Assert::false(is_dir($path));
 		Directory::create($path);
 		Assert::true(is_dir($path));
