@@ -16,6 +16,7 @@ use Kappa\FileSystem\Directory;
 use Kappa\FileSystem\File;
 use Kappa\Tester\TestCase;
 use Nette\Http\FileUpload;
+use Nette\Utils\Image;
 use Tester\Assert;
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -102,6 +103,16 @@ class FileTest extends TestCase
 		unlink($directory->getInfo()->getPathname() . '/uploadFile');
 	}
 
+	public function testFromImage()
+	{
+		$image = Image::fromFile($this->dataPath . '/image.png');
+		$file = File::fromImage($image, $this->dataPath . '/newImage.png');
+		Assert::type('Kappa\FileSystem\File', $file);
+		Assert::same('newImage.png', $file->getInfo()->getBasename());
+
+		unlink($this->dataPath . '/newImage.png');
+	}
+
 	public function testGetInfo()
 	{
 		$file = File::open(__FILE__);
@@ -156,7 +167,7 @@ class FileTest extends TestCase
 	public function testToImage()
 	{
 		$file = File::open($this->dataPath . '/image.png');
-		Assert::type('Kappa\FileSystem\Image', $file->toImage());
+		Assert::type('Nette\Utils\Image', $file->toImage());
 	}
 }
 

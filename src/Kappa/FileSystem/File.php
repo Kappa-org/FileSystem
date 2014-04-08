@@ -11,6 +11,7 @@
 namespace Kappa\FileSystem;
 
 use Nette\Http\FileUpload;
+use Nette\Utils\Image;
 
 /**
  * Class File
@@ -86,6 +87,20 @@ class File
 		$fileUpload->move($target);
 
 		return new self($target);
+	}
+
+	/**
+	 * @param Image $image
+	 * @param string $path
+	 * @param int|null $quality
+	 * @param int|null $type
+	 * @return File
+	 */
+	public static function fromImage(Image $image, $path, $quality = null, $type = null)
+	{
+		$image->save($path, $quality, $type);
+
+		return File::open($path);
 	}
 
 	/**
