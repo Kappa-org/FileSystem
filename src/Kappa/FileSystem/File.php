@@ -150,7 +150,7 @@ class File
 	}
 
 	/**
-	 * @return \Kappa\FileSystem\Image
+	 * @return Image
 	 */
 	public function toImage()
 	{
