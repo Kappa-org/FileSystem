@@ -152,6 +152,12 @@ class FileTest extends TestCase
 
 		unlink($path);
 	}
+
+	public function testToImage()
+	{
+		$file = File::open($this->dataPath . '/image.png');
+		Assert::type('Kappa\FileSystem\Image', $file->toImage());
+	}
 }
 
 \run(new FileTest());

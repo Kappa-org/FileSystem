@@ -133,4 +133,12 @@ class File
 		}
 		return (file_put_contents($this->path, $content, FILE_APPEND) === false) ? : true;
 	}
+
+	/**
+	 * @return \Kappa\FileSystem\Image
+	 */
+	public function toImage()
+	{
+		return Image::fromFile($this->path);
+	}
 }
