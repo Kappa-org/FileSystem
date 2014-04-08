@@ -55,6 +55,7 @@ Create a new image 'newImage' with dimensions 10x10 px and return instance of Fi
 * ```clear()``` - Clear file content *(same as ```overwrite(null)```)*
 * ```append(content, newLine = true)``` - Append text to end file
 * ```getInfo()``` - Returns SplFileInfo
+* ```toImage()``` - Returns Nette\Utils\Image
 
 ### Directory API:
 
