@@ -38,6 +38,16 @@ Upload files via [FileUpload](https://github.com/nette/http/blob/master/src/Http
 $file = File::upload($fileUpload, 'path/to/save/file');
 ```
 
+Load file from [Nette\Utils\Image](https://github.com/nette/utils/blob/master/src/Utils/Image.php)
+```php
+$image = Image::fromFile('image.png');
+$image->resize(10,10);
+$file = File::fromImage($image, 'newImage.png');
+```
+Create a new image 'newImage' with dimensions 10x10 px and return instance of File
+
+*If you can work with same image without creating new file use original file name as second parameter*
+
 ### File API:
 
 * ```read()``` - Returns file content
