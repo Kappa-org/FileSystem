@@ -31,6 +31,14 @@ class SplFileInfoTest extends TestCase
 		Assert::false($file->isImage());
 		Assert::true($image->isImage());
 	}
+
+	public function testGetRelativePath()
+	{
+		$file = new SplFileInfo(__FILE__);
+		Assert::same('/SplFileInfoTest.phpt', $file->getRelativePath(__DIR__));
+		$_SERVER['DOCUMENT_ROOT'] = __DIR__ . '/../';
+		Assert::same('/FileSystem/SplFileInfoTest.phpt', $file->getRelativePath());
+	}
 }
 
 \run(new SplFileInfoTest());

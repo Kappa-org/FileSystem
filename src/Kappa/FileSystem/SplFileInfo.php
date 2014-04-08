@@ -25,4 +25,15 @@ class SplFileInfo extends \SplFileInfo
 	{
 		return Validators::isImage($this->getPathname());
 	}
+
+	/**
+	 * @param string $root
+	 * @return string
+	 */
+	public function getRelativePath($root = null)
+	{
+		$root = realpath(($root) ? : $_SERVER['DOCUMENT_ROOT']);
+
+		return str_replace($root, null, $this->getPathname());
+	}
 } 
