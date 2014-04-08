@@ -86,7 +86,7 @@ class File
 		}
 		$fileUpload->move($target);
 
-		return new self($target);
+		return File::open($target);
 	}
 
 	/**
