@@ -13,6 +13,7 @@
 namespace Kappa\FileSystem\Tests;
 
 use Kappa\FileSystem\Directory;
+use Kappa\FileSystem\File;
 use Kappa\FileSystem\SplFileInfo;
 use Kappa\Tester\TestCase;
 use Tester\Assert;
@@ -67,7 +68,7 @@ class DirectoryTest extends TestCase
 	public function testGetDirectory()
 	{
 		$expected = array(
-			realpath($this->dataPath . '/files') => new SplFileInfo($this->dataPath . '/files')
+			realpath($this->dataPath . '/files') => Directory::open($this->dataPath . '/files')
 		);
 		$directory = Directory::open($this->dataPath);
 		Assert::equal($expected, $directory->getDirectories());
@@ -76,9 +77,9 @@ class DirectoryTest extends TestCase
 	public function testGetFiles()
 	{
 		$expected = array(
-			realpath($this->dataPath . '/files/openFile') => new SplFileInfo($this->dataPath . '/files/openFile'),
-			realpath($this->dataPath . '/files/image.png') => new SplFileInfo($this->dataPath . '/files/image.png'),
-			realpath($this->dataPath . '/files/uploadFile') => new SplFileInfo($this->dataPath . '/files/uploadFile'),
+			realpath($this->dataPath . '/files/openFile') => File::open($this->dataPath . '/files/openFile'),
+			realpath($this->dataPath . '/files/image.png') => File::open($this->dataPath . '/files/image.png'),
+			realpath($this->dataPath . '/files/uploadFile') => File::open($this->dataPath . '/files/uploadFile'),
 		);
 		$directory = Directory::open($this->dataPath . '/files');
 		Assert::equal($expected, $directory->getFiles());
@@ -87,10 +88,10 @@ class DirectoryTest extends TestCase
 	public function testGetContent()
 	{
 		$expected = array(
-			realpath($this->dataPath . '/files/directory') => new SplFileInfo($this->dataPath . '/files/directory'),
-			realpath($this->dataPath . '/files/openFile') => new SplFileInfo($this->dataPath . '/files/openFile'),
-			realpath($this->dataPath . '/files/image.png') => new SplFileInfo($this->dataPath . '/files/image.png'),
-			realpath($this->dataPath . '/files/uploadFile') => new SplFileInfo($this->dataPath . '/files/uploadFile'),
+			realpath($this->dataPath . '/files/directory') =>  Directory::open($this->dataPath . '/files/directory'),
+			realpath($this->dataPath . '/files/openFile') => File::open($this->dataPath . '/files/openFile'),
+			realpath($this->dataPath . '/files/image.png') => File::open($this->dataPath . '/files/image.png'),
+			realpath($this->dataPath . '/files/uploadFile') => File::open($this->dataPath . '/files/uploadFile'),
 		);
 		$directory = Directory::open($this->dataPath . '/files');
 		Assert::equal($expected, $directory->getContent());

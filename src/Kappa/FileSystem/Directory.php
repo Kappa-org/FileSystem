@@ -76,7 +76,7 @@ class Directory
 	{
 		$result = array();
 		foreach (Finder::findDirectories('*')->in($this->path) as $path => $file) {
-			$result[$path] = new SplFileInfo($path);
+			$result[$path] = Directory::open($path);
 		}
 
 		return $result;
@@ -89,7 +89,7 @@ class Directory
 	{
 		$result = array();
 		foreach (Finder::findFiles('*')->in($this->path) as $path => $file) {
-			$result[$path] = new SplFileInfo($path);
+			$result[$path] = File::open($path);
 		}
 
 		return $result;

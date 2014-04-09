@@ -60,9 +60,9 @@ Create a new image 'newImage' with dimensions 10x10 px and return instance of Fi
 ### Directory API:
 
 * ```getInfo()``` - Returns SplFileInfo
-* ```getDirectories()``` - Returns directories in directory as array ```path => SplFileInfo```
-* ```getFiles()``` - Returns files in directory as array ```path => SplFileInfo```
-* ```getContent()``` - Returns directories and files in directory as array ```path => SplFileInfo```
+* ```getDirectories()``` - Returns directories in directory as array ```path => Directory```
+* ```getFiles()``` - Returns files in directory as array ```path => File```
+* ```getContent()``` - Returns directories and files in directory as array ```path => Directory|File```
 
 ### FileSystem API:
 
