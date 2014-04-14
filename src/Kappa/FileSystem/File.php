@@ -11,7 +11,7 @@
 namespace Kappa\FileSystem;
 
 use Nette\Http\FileUpload;
-use Nette\Image;
+use Nette\Utils\Image;
 
 /**
  * Class File

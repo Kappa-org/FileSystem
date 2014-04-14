@@ -15,10 +15,13 @@
 		"email": "zarubaondra@gmail.com",
 		"issues": "https://github.com/Kappa-org/FileSystem/issues"
 	},
+	"minimum-stability": "beta",
 	"require": {
 		"php": ">= 5.3.3",
-		"kappa/framework": "dev-master#bec285a",
-		"nette/nette": "~2.1"
+		"kappa/utils": "@dev",
+		"nette/utils": "~2.2",
+		"nette/finder": "~2.2",
+		"nette/http": "~2.2"
 	},
 	"require-dev": {
 		"kappa/tester": "1.1.*"
