@@ -5,7 +5,6 @@
 	"homepage": "https://github.com/Kappa-org/FileSystem",
 	"license": ["BSD-3-Clause"],
 	"type": "library",
-	"minimum-stability": "dev",
 	"authors": [
 		{
 			"name": "Ondřej Záruba",
@@ -18,12 +17,11 @@
 	},
 	"require": {
 		"php": ">= 5.3.3",
-		"kappa/utils": "@dev",
-		"nette/finder": "2.2.*"
+		"kappa/framework": "dev-master#bec285a",
+		"nette/nette": "~2.1"
 	},
 	"require-dev": {
-		"kappa/tester": "1.1.*",
-		"nette/http": "2.2.*"
+		"kappa/tester": "1.1.*"
 	},
 	"suggest": {
 		"nette/http": "For using FileUpload as File::upload"
