@@ -18,10 +18,8 @@
 	"minimum-stability": "beta",
 	"require": {
 		"php": ">= 5.3.3",
-		"kappa/utils": "@dev",
-		"nette/utils": "~2.2",
-		"nette/finder": "~2.2",
-		"nette/http": "~2.2"
+		"kappa/utils": "~1.0",
+		"nette/nette": "~2.1"
 	},
 	"require-dev": {
 		"kappa/tester": "1.1.*"
@@ -35,6 +33,9 @@
 		},
 		"classmap": [
 			"src/Kappa/FileSystem/exceptions.php"
+		],
+		"files": [
+			"src/Kappa/FileSystem/compatibility.php"
 		]
 	}
 }
