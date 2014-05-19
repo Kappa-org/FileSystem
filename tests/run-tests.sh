@@ -19,6 +19,8 @@ function rollback()
 }
 
 backup
+echo "Default composer"
+./vendor/bin/tester tests/ $@
 variables="nette-2.1 nette-dev"
 for variable in $variables; do
 	export NETTE=$variable
