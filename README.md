@@ -5,10 +5,8 @@ Easy system for work with files and directories
 ## Requirements:
 
 * PHP 5.3.3 or higher
-* [Kappa\Utils](https://github.com/kappa-org/utils)
-* [Nette\Finder](https://github.com/nette/finder) 2.2.*
-* [Nette\Http](https://github.com/nette/http) 2.2.* *for FileUpload*
-* [Nette\Utils](https://github.com/nette/utils) 2.2.* *for Image*
+* [Kappa\Utils](https://github.com/kappa-org/utils) 1.0.0
+* [Nette framework](https://github.com/nette/nette) ~2.1
 
 ## Installation
 
