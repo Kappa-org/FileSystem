@@ -10,6 +10,7 @@
 
 namespace Kappa\FileSystem;
 
+use Kappa\Utils\Validators;
 use Nette\Http\FileUpload;
 use Nette\Utils\Image;
 
@@ -101,6 +102,28 @@ class File
 		$image->save($path, $quality, $type);
 
 		return File::open($path);
+	}
+
+	public static function fromUrl($source, $target, $overwrite = false)
+	{
+		if (!Validators::checkHttpStatus($source, array(200))) {
+			throw new UrlNotFoundException("Url '{$source}' has not been found");
+		}
+		if (!$overwrite && is_file($target)) {
+			throw new FileAlreadyExistException("File '{$target}' already exist");
+		}
+		$fp = fopen ($target, 'a+');
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $source);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
+		curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_FILE, $fp);
+		curl_exec($ch);
+		curl_close($ch);
+		fclose($fp);
+
+		return File::open($target);
 	}
 
 	/**

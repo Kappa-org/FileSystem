@@ -169,6 +169,18 @@ class FileTest extends TestCase
 		$file = File::open($this->dataPath . '/image.png');
 		Assert::type('Nette\Utils\Image', $file->toImage());
 	}
+
+	public function testFromUrl()
+	{
+		$url = 'https://raw.githubusercontent.com/Kappa-org/FileSystem/master/tests/data/files/image.png';
+		$save = $this->dataPath . '/download.png';
+		Assert::type('Kappa\FileSystem\File', $file = File::fromUrl($url, $save));
+		Assert::same(md5_file($this->dataPath . '/image.png'), md5_file($file->getInfo()->getPathname()));
+		Assert::throws(function() {
+			File::fromUrl('no', 'no');
+		}, 'Kappa\FileSystem\UrlNotFoundException');
+		unlink($save);
+	}
 }
 
 \run(new FileTest());
