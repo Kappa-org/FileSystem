@@ -20,6 +20,15 @@ class FileNotFoundException extends IOException
 }
 
 /**
+ * Class UrlNotFoundException
+ * @package Kappa\FileSystem
+ */
+class UrlNotFoundException extends IOException
+{
+
+}
+
+/**
  * Class FileAlreadyExistException
  * @package Kappa\FileSystem
  */
