@@ -15,7 +15,6 @@
 		"email": "zarubaondra@gmail.com",
 		"issues": "https://github.com/Kappa-org/FileSystem/issues"
 	},
-	"minimum-stability": "beta",
 	"require": {
 		"php": ">= 5.3.3",
 		"kappa/utils": "~1.0",
