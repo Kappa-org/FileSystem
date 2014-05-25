@@ -18,10 +18,11 @@
 	"require": {
 		"php": ">= 5.3.3",
 		"kappa/utils": "~1.0",
-		"nette/nette": "~2.1@dev"
+		"nette/finder": "~2.2"
 	},
 	"require-dev": {
-		"kappa/tester": "1.1.*"
+		"kappa/tester": "1.1.*",
+		"nette/http": "~2.2"
 	},
 	"suggest": {
 		"nette/http": "For using FileUpload as File::upload"
