@@ -33,9 +33,6 @@
 		},
 		"classmap": [
 			"src/Kappa/FileSystem/exceptions.php"
-		],
-		"files": [
-			"src/Kappa/FileSystem/compatibility.php"
 		]
 	}
 }
