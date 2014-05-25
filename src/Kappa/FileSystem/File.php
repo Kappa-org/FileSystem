@@ -12,7 +12,7 @@ namespace Kappa\FileSystem;
 
 use Kappa\Utils\Validators;
 use Nette\Http\FileUpload;
-use Nette\Utils\Image;
+use Nette\Image;
 
 /**
  * Class File

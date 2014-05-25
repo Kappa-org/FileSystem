@@ -5,8 +5,8 @@ Easy system for work with files and directories
 ## Requirements:
 
 * PHP 5.3.3 or higher
-* [Kappa\Utils](https://github.com/kappa-org/utils) 1.0.0
-* [Nette framework](https://github.com/nette/nette) ~2.1
+* [Kappa\Utils](https://github.com/kappa-org/utils) dev-nette-2.1
+* [Nette framework](https://github.com/nette/nette) 2.1.*
 
 ## Installation
 
@@ -36,7 +36,7 @@ Upload files via [FileUpload](https://github.com/nette/http/blob/master/src/Http
 $file = File::upload($fileUpload, 'path/to/save/file');
 ```
 
-Load file from [Nette\Utils\Image](https://github.com/nette/utils/blob/master/src/Utils/Image.php)
+Load file from [Nette\Image](https://github.com/nette/utils/blob/master/src/Utils/Image.php)
 ```php
 $image = Image::fromFile('image.png');
 $image->resize(10,10);
